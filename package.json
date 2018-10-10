@@ -8,7 +8,8 @@
     "js-sha3": "^0.8.0"
   },
   "scripts": {
-    "start": "nodemon ./src/server.js"
+    "start": "node ./src/server.js",
+    "startmon": "nodemon ./src/server.js"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"
