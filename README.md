@@ -4,17 +4,11 @@
 
 [DFINITY Explorer](https://www.dfinityexplorer.org/) is an open-source block explorer built by the DFINITY community. Read more about the project in the [wiki](https://github.com/dfinityexplorer/dfinityexplorer/wiki).
 
+This repo is the back end of DFINITY Explorer.
+
 ## Open-Source Libraries Used
-* React
-* Styled-Components
-* Material-UI
-* D3
-* PixiJS
-* throttle-debounce
+* graphql-yoga
 * js-sha3
-* loadCSS
-* Google Fonts
-* Font Awesome
 
 ## Code of Conduct
 
