@@ -5,11 +5,11 @@
   "homepage": "https://www.dfinityexplorer.org",
   "dependencies": {
     "graphql-yoga": "^1.16.2",
-    "js-sha3": "^0.8.0"
+    "js-sha3": "^0.8.0",
+    "prisma-binding": "^2.1.6"
   },
   "scripts": {
-    "start": "node ./src/server.js",
-    "startmon": "nodemon ./src/server.js"
+    "start": "node ./src/server.js"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"

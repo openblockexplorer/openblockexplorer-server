@@ -3,41 +3,48 @@
  # @copyright Copyright (c) 2018 Dylan Miller and dfinityexplorer contributors
  # @license MIT License
  ##
- 
+
+# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload from "./generated/prisma.graphql"
+
 # Queries
 type Query {
-  blocks(first: Int): [Block!]!
+  blocks(first: Int, orderBy: BlockOrderByInput): [Block!]!
   block(id: ID!): Block
-  transactions(first: Int): [Transaction!]!
+  transactions(first: Int, orderBy: TransactionOrderByInput): [Transaction!]!
   transaction(id: ID!): Transaction
 }
 
 # Mutations
 # Do not expose mutations on deployed server.
-#type Mutation {
-#  createBlock(height: Int!, timestamp: Int!, numTransactions: Int!): Block
-#  createTransaction(hash: Int!, amount: Float!): Transaction
-#}
+# type Mutation {
+#  createBlock(height: Int!, timestamp: String!): Block!
+#  createTransaction(hash: String!, amount: Float!, blockId: ID!): Transaction!
+# }
 
 # Subscriptions
 type Subscription {
-  newBlock: Block!
-  newTransaction: Transaction!
-  blocks: [Block!]!
-  transactions: [Transaction!]!
+  block: BlockSubscriptionPayload
+  transaction: TransactionSubscriptionPayload
+}
+
+# An interface which custom types should implement.
+interface Node {
+  id: ID!
 }
 
 # This type represents a DFINITY block.
-type Block {
+type Block implements Node {
   id: ID!
   height: Int!
   timestamp: String!
+  transactions: [Transaction!]!
   numTransactions: Int!
 }
 
 # This type represents a DFINITY transaction.
-type Transaction {
+type Transaction implements Node {
   id: ID!
   hash: String!
   amount: Float!
+  block: Block!
 }

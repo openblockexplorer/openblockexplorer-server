@@ -1,0 +1,15 @@
+# This type represents a DFINITY block.
+type Block {
+  id: ID! @unique
+  height: Int! @unique
+  timestamp: DateTime!
+  transactions: [Transaction!]!
+}
+
+# This type represents a DFINITY transaction.
+type Transaction {
+  id: ID! @unique
+  hash: String! @unique
+  amount: Float!
+  block: Block!
+}
