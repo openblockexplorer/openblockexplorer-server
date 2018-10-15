@@ -1,4 +1,4 @@
-endpoint: https://dfinityexplorer.herokuapp.com/dfinityexplorer-prisma/dev
+endpoint: https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
 datamodel: datamodel.prisma
 secret: mysecret123
 hooks:
