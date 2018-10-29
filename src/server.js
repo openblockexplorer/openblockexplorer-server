@@ -12,13 +12,17 @@ const Query = require('./resolvers/query');
 // const Mutation = require('./resolvers/mutation');
 const Subscription = require('./resolvers/subscription');
 const Block = require('./resolvers/Block');
+const SearchGetTypeResult = require('./resolvers/SearchGetTypeResult');
+const SearchAutoCompleteResult = require('./resolvers/SearchAutoCompleteResult');
 
 const resolvers = {
   Query,
   // Do not expose mutations on deployed server.
   // Mutation,
   Subscription,
-  Block
+  Block,
+  SearchGetTypeResult,
+  SearchAutoCompleteResult
 };
 
 const prisma = new Prisma({
@@ -29,6 +33,18 @@ const prisma = new Prisma({
   // API will be logged to the console. Set to false for production.
   debug: false
 });
+
+// --- Notes on using GraphQL Playground with Prisma server ---
+// The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
+//  prisma token
+// Next, open the Prisma server URL in a browser:
+//  https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
+// Put this into the HTTP HEADERS field of GraphQL Playground:
+//  {
+//    "Authorization": "Bearer [token]"
+//  }
+// For more details, see:
+//  https://www.prisma.io/docs/reference/prisma-api/concepts-utee3eiquo#authentication
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
