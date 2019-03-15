@@ -45,15 +45,17 @@ module.exports = class BlockProducer {
    * @private
    */
   addBlock() {
-    const date = new Date();
+    let transactions = [];
     const numTransactions = 0 + getRandomInt(0, 100);
+    for (let i = 0; i < numTransactions; i++)
+      transactions.push(this.createTransaction());
+
+    const date = new Date();
     const block = {
       height: this.blockHeight++,
       timestamp: date,
-      transactions: []
+      transactions: { create: transactions }
     };
-    for (let i = 0; i < numTransactions; i++)
-      block.transactions.push(this.createTransaction());
     this.prisma.mutation
       .createBlock({ data: block }, '{ id }');
   }
