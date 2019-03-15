@@ -46,7 +46,7 @@ module.exports = class BlockProducer {
    */
   addBlock() {
     const date = new Date();
-    const numTransactions = 0 + getRandomInt(0, 12);
+    const numTransactions = 0 + getRandomInt(0, 100);
     const block = {
       height: this.blockHeight++,
       timestamp: date

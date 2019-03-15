@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://www.dfinityexplorer.org",
   "dependencies": {
+    "axios": "^0.18.0",
     "graphql-yoga": "^1.16.2",
     "js-sha3": "^0.8.0",
     "prisma-binding": "^2.1.6"
@@ -12,6 +13,6 @@
     "start": "node ./src/server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.10"
   }
 }

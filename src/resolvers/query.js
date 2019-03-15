@@ -1,8 +1,10 @@
 /**
  * @file query
- * @copyright Copyright (c) 2018 Dylan Miller and dfinityexplorer contributors
+ * @copyright Copyright (c) 2018-2019 Dylan Miller and dfinityexplorer contributors
  * @license MIT License
  */
+
+const axios = require('axios');
 
 /**
  * GraphQL resolver for blocks query.
@@ -100,11 +102,40 @@ function searchAutoComplete(parent, args, context, info) {
     return [];
 }
 
+/**
+ * GraphQL resolver for price query.
+ * @param {Object} parent The result object of the parent resolver.
+ * @param {Object} args The parameters for the query.
+ * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
+ * @param {Object} info An AST representation of the query.
+ * @return {Object} The scalar/object resolver result.
+ */
+async function price(parent, args, context, info) {
+  // Until the DFINITY network launches, use the ETH price divided by 15 as a simulated DFN price.
+  const url =
+    `https://api.nomics.com/v1/markets/prices?key=${process.env.NOMICS_API_KEY}&currency=ETH`;
+  const dfnPrice = await axios.get(url)
+    .then(res => {
+      const binance = res.data.find(obj => {
+        return obj.exchange === 'binance'
+      });
+      if (binance != undefined) {
+        const dfnPrice = parseFloat(binance.price) / 15;
+        return dfnPrice;
+      }
+      else
+        throw new Error("Exchange data not found.");
+    });
+    // Do not catch errors, let them propagate to the client.
+  return dfnPrice;
+}
+
 module.exports = {
   blocks,
   block,
   transactions,
   transaction,
   searchGetType,
-  searchAutoComplete
+  searchAutoComplete,
+  price
 };

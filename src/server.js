@@ -1,6 +1,6 @@
 /**
  * @file server
- * @copyright Copyright (c) 2018 Dylan Miller and dfinityexplorer contributors
+ * @copyright Copyright (c) 2018-2019 Dylan Miller and dfinityexplorer contributors
  * @license MIT License
  */
 
@@ -45,6 +45,18 @@ const prisma = new Prisma({
 //  }
 // For more details, see:
 //  https://www.prisma.io/docs/reference/prisma-api/concepts-utee3eiquo#authentication
+//
+// --- Notes on using GraphQL Playground to delete blocks and transactions ---
+// mutation {
+//   deleteManyTransactions(where: { block: { height_lt: 1600000 } }) {
+//     count
+//   }
+// }
+// mutation {
+//   deleteManyBlocks(where: { height_lt: 1600000 }) {
+//     count
+//   }
+// }
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
