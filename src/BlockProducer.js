@@ -49,14 +49,13 @@ module.exports = class BlockProducer {
     const numTransactions = 0 + getRandomInt(0, 100);
     const block = {
       height: this.blockHeight++,
-      timestamp: date
-    }; 
+      timestamp: date,
+      transactions: []
+    };
+    for (let i = 0; i < numTransactions; i++)
+      block.transactions.push(this.createTransaction());
     this.prisma.mutation
-      .createBlock({ data: block }, '{ id }')
-      .then(response => {
-        for (let i = 0; i < numTransactions; i++)
-          this.addTransaction(response.id);
-      });
+      .createBlock({ data: block }, '{ id }');
   }
 
   /**
@@ -64,15 +63,25 @@ module.exports = class BlockProducer {
    * @param {String} blockId The ID of the block to add the transaction to.
    * @private
    */
-  addTransaction(blockId) {                    
+  addTransaction(blockId) {   
+    const transaction = createTransaction();
+    transaction.block = { connect: { id: blockId} };
+    this.prisma.mutation
+      .createTransaction({ data: transaction }, '{ id }');
+  }
+
+  /**
+   * Create a new transaction object.
+   * @return {Object} The created transaction object.
+   * @private
+   */
+  createTransaction(blockId) {                    
     const hash = sha3_256(getRandomInt(0, Number.MAX_SAFE_INTEGER).toString());
     const amount = getRandomNumber(1, getRandomNumber(0, 1) > 0.5 ? 1000 : 100);
     const transaction = {
       hash: hash,
-      amount: amount,
-      block: { connect: { id: blockId} }
+      amount: amount
     };
-    this.prisma.mutation
-      .createTransaction({ data: transaction }, '{ id }');
+    return transaction;
   }
 };
