@@ -109,7 +109,12 @@ function searchAutoComplete(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 function price(parent, args, context, info) {
-  return context.db.query.prices({ first: 1 }, info)[0];
+  return context.db.query.prices({ first: 1 }, info)
+    .then(res => {
+      if (!res.length)
+        throw new Error('No Price objects found.');
+      return res[0];
+    });
 }
 
 module.exports = {
