@@ -55,7 +55,7 @@ type Transaction implements Node {
 }
 
 # Represents the DFN price at a given time.
-type Price implements Node {
+type Price {
   timestamp: String!
   price: Float!
 }
