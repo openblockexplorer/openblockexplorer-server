@@ -37,7 +37,7 @@ module.exports = class BlockProducer {
    */
   start() {
     // Add new blocks using intervals.
-    //!!!setInterval(() => { this.addBlock() }, this.blockTimeMs);
+    setInterval(() => { this.addBlock() }, this.blockTimeMs);
   }
 
   /**
