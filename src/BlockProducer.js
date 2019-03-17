@@ -37,7 +37,7 @@ module.exports = class BlockProducer {
    */
   start() {
     // Add new blocks using intervals.
-    setInterval(() => { this.addBlock() }, this.blockTimeMs);
+    //!!!setInterval(() => { this.addBlock() }, this.blockTimeMs);
   }
 
   /**
@@ -46,7 +46,7 @@ module.exports = class BlockProducer {
    */
   addBlock() {
     let transactions = [];
-    const numTransactions = 0 + getRandomInt(0, 100);
+    const numTransactions = 0 + getRandomInt(0, 20);
     for (let i = 0; i < numTransactions; i++)
       transactions.push(this.createTransaction());
 
@@ -56,8 +56,10 @@ module.exports = class BlockProducer {
       timestamp: date,
       transactions: { create: transactions }
     };
+    // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
     this.prisma.mutation
-      .createBlock({ data: block }, '{ id }');
+      .createBlock({ data: block }, '{ id }')
+      .catch(error => { console.log(error); });
   }
 
   /**
@@ -68,8 +70,10 @@ module.exports = class BlockProducer {
   addTransaction(blockId) {   
     const transaction = createTransaction();
     transaction.block = { connect: { id: blockId} };
+    // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
     this.prisma.mutation
-      .createTransaction({ data: transaction }, '{ id }');
+      .createTransaction({ data: transaction }, '{ id }')
+      .catch(error => { console.log(error); });
   }
 
   /**
