@@ -4,8 +4,6 @@
  * @license MIT License
  */
 
-const axios = require('axios');
-
 /**
  * GraphQL resolver for blocks query.
  * @param {Object} parent The result object of the parent resolver.

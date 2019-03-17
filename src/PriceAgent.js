@@ -4,6 +4,8 @@
  * @license MIT License
  */
 
+const axios = require('axios');
+
 /**
  * Agent that adds DFN price information to the Prisma server at regular intervals.
  */
