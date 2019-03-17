@@ -1,9 +1,14 @@
+# This file is used by graphql-cli, and is used to provide autocompletion in Visual Studio Code
+# using the GraphQL extension by Prisma. It uses the schema to generate types for the resolvers. It
+# aims to "provide a unifying configuration file format to configure your GraphQL schema in your
+# development environment."
 projects:
   app:
     schemaPath: src/schema.graphql
     extensions:
+      # "You may specify your endpoints info in .graphqlconfig which may be used by some tools."
       endpoints:
-        # This may need to be changed for production.
+        # This may or may not need to be changed for production.
         default: http://localhost:4000
   database:
     schemaPath: src/generated/prisma.graphql

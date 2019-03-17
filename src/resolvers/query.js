@@ -110,24 +110,8 @@ function searchAutoComplete(parent, args, context, info) {
  * @param {Object} info An AST representation of the query.
  * @return {Object} The scalar/object resolver result.
  */
-async function price(parent, args, context, info) {
-  // Until the DFINITY network launches, use the ETH price divided by 15 as a simulated DFN price.
-  const url =
-    `https://api.nomics.com/v1/markets/prices?key=${process.env.NOMICS_API_KEY}&currency=ETH`;
-  const dfnPrice = await axios.get(url)
-    .then(res => {
-      const binance = res.data.find(obj => {
-        return obj.exchange === 'binance'
-      });
-      if (binance != undefined) {
-        const dfnPrice = parseFloat(binance.price) / 15;
-        return dfnPrice;
-      }
-      else
-        throw new Error("Exchange data not found.");
-    });
-    // Do not catch errors, let them propagate to the client.
-  return dfnPrice;
+function price(parent, args, context, info) {
+  return context.db.query.prices({ first: 1 }, info)[0];
 }
 
 module.exports = {

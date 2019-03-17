@@ -5,9 +5,9 @@
   "homepage": "https://www.dfinityexplorer.org",
   "dependencies": {
     "axios": "^0.18.0",
-    "graphql-yoga": "^1.16.2",
+    "graphql-yoga": "^1.17.4",
     "js-sha3": "^0.8.0",
-    "prisma-binding": "^2.1.6"
+    "prisma-binding": "^2.3.8"
   },
   "scripts": {
     "start": "node ./src/server.js"

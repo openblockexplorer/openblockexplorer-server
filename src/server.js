@@ -7,6 +7,7 @@
 const { GraphQLServer } = require('graphql-yoga');
 const { Prisma } = require('prisma-binding');
 const BlockProducer = require('./BlockProducer');
+const PriceAgent = require('./PriceAgent');
 const Query = require('./resolvers/query');
 // Do not expose mutations on deployed server.
 // const Mutation = require('./resolvers/mutation');
@@ -75,3 +76,7 @@ server.start(() => console.log('The server is running on port 4000...'));
 // Add simulated blocks to the Prisma server at 3.5 second intervals.
 const blockProducer = new BlockProducer(prisma);
 blockProducer.start();
+
+// Add DFN price information to the Prisma server at regular intervals.
+const priceAgent = new PriceAgent(prisma);
+priceAgent.start();

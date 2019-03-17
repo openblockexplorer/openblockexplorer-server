@@ -4,7 +4,7 @@
  # @license MIT License
  ##
 
-# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload from "./generated/prisma.graphql"
+# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
 
 # Queries
 type Query {
@@ -14,7 +14,7 @@ type Query {
   transaction(hash: String!): Transaction
   searchGetType(query: String!): SearchGetTypeResult!
   searchAutoComplete(query: String!, first: Int): SearchAutoCompleteResult!
-  price: Float!
+  price: Price!
 }
 
 # Mutations
@@ -22,12 +22,14 @@ type Query {
 # type Mutation {
 #  createBlock(height: Int!, timestamp: String!): Block!
 #  createTransaction(hash: String!, amount: Float!, blockId: ID!): Transaction!
+#  createPrice(timestamp: String!, price: Float!): Price!
 # }
 
 # Subscriptions
 type Subscription {
   block: BlockSubscriptionPayload
   transaction: TransactionSubscriptionPayload
+  price: PriceSubscriptionPayload
 }
 
 # An interface which custom types should implement.
@@ -50,6 +52,12 @@ type Transaction implements Node {
   hash: String!
   amount: Float!
   block: Block!
+}
+
+# Represents the DFN price at a given time.
+type Price implements Node {
+  timestamp: String!
+  price: Float!
 }
 
 # Holds a searchGetType result.
