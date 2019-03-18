@@ -46,7 +46,7 @@ module.exports = class BlockProducer {
    */
   addBlock() {
     let transactions = [];
-    const numTransactions = 0 + getRandomInt(0, 20);
+    const numTransactions = 0 + getRandomInt(0, 12);
     for (let i = 0; i < numTransactions; i++)
       transactions.push(this.createTransaction());
 
