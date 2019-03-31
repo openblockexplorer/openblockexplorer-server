@@ -141,5 +141,6 @@ module.exports = {
   transaction,
   searchGetType,
   searchAutoComplete,
+  networkStatistics,
   price
 };
