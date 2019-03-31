@@ -19,6 +19,11 @@ module.exports = class NetworkStatisticsAgent {
 
     this.blocks = [];
     this.numTransactions = 0;
+    this.dailyNetworkStatistics = {
+      date: this.getCurrentUTCDate(),
+      numBlocks: 0,
+      numTransactions: 0
+    };
   }
 
   /**
@@ -48,6 +53,7 @@ module.exports = class NetworkStatisticsAgent {
    * Handler for the block subscription, which adds a network statistics object to the Prisma server
    * for every block.
    * @param {Object} subscription The subscription object.
+   * @private
    */
   async subscriptionHandler(subscription) {
     let result;
@@ -90,7 +96,36 @@ module.exports = class NetworkStatisticsAgent {
         this.prisma.mutation
           .createNetworkStatistics({ data: networkStatistics }, '{ secondsPerBlock }');
       }
+
+      // Create/update the daily network statistics object on the Prisma server.
+      const date = this.getCurrentUTCDate();
+      if (date.getTime() !== this.dailyNetworkStatistics.date.getTime()) {
+        this.dailyNetworkStatistics.date = date;
+        this.dailyNetworkStatistics.numBlocks = 0;
+        this.dailyNetworkStatistics.numTransactions = 0;
+      }
+      this.dailyNetworkStatistics.numBlocks++;
+      this.dailyNetworkStatistics.numTransactions += block.numTransactions;
+      this.prisma.mutation
+        .upsertDailyNetworkStatistics(
+          {
+            where: { date: this.dailyNetworkStatistics.date },
+            create: this.dailyNetworkStatistics,
+            update: this.dailyNetworkStatistics
+          },
+          '{ date }'
+        );
     }
     while (!result.done);
+  }
+
+  /**
+   * Returns the current UTC date with a time of 00:00:00.000 (midnight).
+   * @return {Object} the current UTC date with a time of 00:00:00.000 (midnight).
+   * @private
+   */
+  getCurrentUTCDate() {
+    const date = new Date();
+    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
   }
 };

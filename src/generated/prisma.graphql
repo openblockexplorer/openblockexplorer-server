@@ -1,7 +1,11 @@
 # source: https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
-# timestamp: Sat Mar 30 2019 19:42:27 GMT-0700 (PDT)
+# timestamp: Sun Mar 31 2019 09:02:01 GMT-0700 (PDT)
 
 type AggregateBlock {
+  count: Int!
+}
+
+type AggregateDailyNetworkStatistics {
   count: Int!
 }
 
@@ -276,6 +280,184 @@ input BlockWhereUniqueInput {
   height: Int
 }
 
+type DailyNetworkStatistics {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+"""A connection to a list of items."""
+type DailyNetworkStatisticsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DailyNetworkStatisticsEdge]!
+  aggregate: AggregateDailyNetworkStatistics!
+}
+
+input DailyNetworkStatisticsCreateInput {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+"""An edge in a connection."""
+type DailyNetworkStatisticsEdge {
+  """The item at the end of the edge."""
+  node: DailyNetworkStatistics!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DailyNetworkStatisticsOrderByInput {
+  date_ASC
+  date_DESC
+  numBlocks_ASC
+  numBlocks_DESC
+  numTransactions_ASC
+  numTransactions_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DailyNetworkStatisticsPreviousValues {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+type DailyNetworkStatisticsSubscriptionPayload {
+  mutation: MutationType!
+  node: DailyNetworkStatistics
+  updatedFields: [String!]
+  previousValues: DailyNetworkStatisticsPreviousValues
+}
+
+input DailyNetworkStatisticsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DailyNetworkStatisticsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DailyNetworkStatisticsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DailyNetworkStatisticsSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DailyNetworkStatisticsWhereInput
+}
+
+input DailyNetworkStatisticsUpdateInput {
+  date: DateTime
+  numBlocks: Int
+  numTransactions: Int
+}
+
+input DailyNetworkStatisticsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DailyNetworkStatisticsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DailyNetworkStatisticsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DailyNetworkStatisticsWhereInput!]
+  date: DateTime
+
+  """All values that are not equal to given value."""
+  date_not: DateTime
+
+  """All values that are contained in given list."""
+  date_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  date_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  date_lt: DateTime
+
+  """All values less than or equal the given value."""
+  date_lte: DateTime
+
+  """All values greater than the given value."""
+  date_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  date_gte: DateTime
+  numBlocks: Int
+
+  """All values that are not equal to given value."""
+  numBlocks_not: Int
+
+  """All values that are contained in given list."""
+  numBlocks_in: [Int!]
+
+  """All values that are not contained in given list."""
+  numBlocks_not_in: [Int!]
+
+  """All values less than the given value."""
+  numBlocks_lt: Int
+
+  """All values less than or equal the given value."""
+  numBlocks_lte: Int
+
+  """All values greater than the given value."""
+  numBlocks_gt: Int
+
+  """All values greater than or equal the given value."""
+  numBlocks_gte: Int
+  numTransactions: Int
+
+  """All values that are not equal to given value."""
+  numTransactions_not: Int
+
+  """All values that are contained in given list."""
+  numTransactions_in: [Int!]
+
+  """All values that are not contained in given list."""
+  numTransactions_not_in: [Int!]
+
+  """All values less than the given value."""
+  numTransactions_lt: Int
+
+  """All values less than or equal the given value."""
+  numTransactions_lte: Int
+
+  """All values greater than the given value."""
+  numTransactions_gt: Int
+
+  """All values greater than or equal the given value."""
+  numTransactions_gte: Int
+}
+
+input DailyNetworkStatisticsWhereUniqueInput {
+  date: DateTime
+}
+
 scalar DateTime
 
 """
@@ -287,20 +469,26 @@ scalar Long
 type Mutation {
   createTransaction(data: TransactionCreateInput!): Transaction!
   createNetworkStatistics(data: NetworkStatisticsCreateInput!): NetworkStatistics!
+  createDailyNetworkStatistics(data: DailyNetworkStatisticsCreateInput!): DailyNetworkStatistics!
   createPrice(data: PriceCreateInput!): Price!
   createBlock(data: BlockCreateInput!): Block!
   updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): Transaction
+  updateDailyNetworkStatistics(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
   updateBlock(data: BlockUpdateInput!, where: BlockWhereUniqueInput!): Block
   deleteTransaction(where: TransactionWhereUniqueInput!): Transaction
+  deleteDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
   deleteBlock(where: BlockWhereUniqueInput!): Block
   upsertTransaction(where: TransactionWhereUniqueInput!, create: TransactionCreateInput!, update: TransactionUpdateInput!): Transaction!
+  upsertDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!, create: DailyNetworkStatisticsCreateInput!, update: DailyNetworkStatisticsUpdateInput!): DailyNetworkStatistics!
   upsertBlock(where: BlockWhereUniqueInput!, create: BlockCreateInput!, update: BlockUpdateInput!): Block!
   updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput): BatchPayload!
   updateManyNetworkStatisticses(data: NetworkStatisticsUpdateInput!, where: NetworkStatisticsWhereInput): BatchPayload!
+  updateManyDailyNetworkStatisticses(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereInput): BatchPayload!
   updateManyPrices(data: PriceUpdateInput!, where: PriceWhereInput): BatchPayload!
   updateManyBlocks(data: BlockUpdateInput!, where: BlockWhereInput): BatchPayload!
   deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
   deleteManyNetworkStatisticses(where: NetworkStatisticsWhereInput): BatchPayload!
+  deleteManyDailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput): BatchPayload!
   deleteManyPrices(where: PriceWhereInput): BatchPayload!
   deleteManyBlocks(where: BlockWhereInput): BatchPayload!
 }
@@ -631,12 +819,15 @@ input PriceWhereInput {
 type Query {
   transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
   networkStatisticses(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [NetworkStatistics]!
+  dailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStatistics]!
   prices(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Price]!
   blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
   transaction(where: TransactionWhereUniqueInput!): Transaction
+  dailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
   block(where: BlockWhereUniqueInput!): Block
   transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
   networkStatisticsesConnection(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NetworkStatisticsConnection!
+  dailyNetworkStatisticsesConnection(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatisticsConnection!
   pricesConnection(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PriceConnection!
   blocksConnection(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BlockConnection!
 
@@ -650,6 +841,7 @@ type Query {
 type Subscription {
   transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
   networkStatistics(where: NetworkStatisticsSubscriptionWhereInput): NetworkStatisticsSubscriptionPayload
+  dailyNetworkStatistics(where: DailyNetworkStatisticsSubscriptionWhereInput): DailyNetworkStatisticsSubscriptionPayload
   price(where: PriceSubscriptionWhereInput): PriceSubscriptionPayload
   block(where: BlockSubscriptionWhereInput): BlockSubscriptionPayload
 }

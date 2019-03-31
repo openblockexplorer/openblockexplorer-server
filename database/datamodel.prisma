@@ -17,6 +17,13 @@ type Transaction {
   block: Block!
 }
 
+# This type represents daily DFINITY network statistics.
+type DailyNetworkStatistics {
+  date: DateTime! @unique
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
 # This type represents DFINITY network statistics.
 type NetworkStatistics {
   secondsPerBlock: Float!
