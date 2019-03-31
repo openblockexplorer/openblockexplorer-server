@@ -59,7 +59,7 @@ module.exports = class BlockProducer {
     // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
     this.prisma.mutation
       .createBlock({ data: block }, '{ id }')
-      .catch(error => { console.log(error); });
+      .catch(error => console.log(error));
   }
 
   /**
@@ -73,7 +73,7 @@ module.exports = class BlockProducer {
     // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
     this.prisma.mutation
       .createTransaction({ data: transaction }, '{ id }')
-      .catch(error => { console.log(error); });
+      .catch(error => console.log(error));
   }
 
   /**
@@ -81,7 +81,7 @@ module.exports = class BlockProducer {
    * @return {Object} The created transaction object.
    * @private
    */
-  createTransaction(blockId) {                    
+  createTransaction() {                    
     const hash = sha3_256(getRandomInt(0, Number.MAX_SAFE_INTEGER).toString());
     const amount = getRandomNumber(1, getRandomNumber(0, 1) > 0.5 ? 1000 : 100);
     const transaction = {

@@ -1,7 +1,11 @@
 # source: https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
-# timestamp: Sat Mar 16 2019 13:19:41 GMT-0700 (PDT)
+# timestamp: Sat Mar 30 2019 19:42:27 GMT-0700 (PDT)
 
 type AggregateBlock {
+  count: Int!
+}
+
+type AggregateNetworkStatistics {
   count: Int!
 }
 
@@ -39,6 +43,11 @@ input BlockCreateInput {
   height: Int!
   timestamp: DateTime!
   transactions: TransactionCreateManyWithoutBlockInput
+}
+
+input BlockCreateOneInput {
+  create: BlockCreateInput
+  connect: BlockWhereUniqueInput
 }
 
 input BlockCreateOneWithoutTransactionsInput {
@@ -118,10 +127,24 @@ input BlockSubscriptionWhereInput {
   node: BlockWhereInput
 }
 
+input BlockUpdateDataInput {
+  height: Int
+  timestamp: DateTime
+  transactions: TransactionUpdateManyWithoutBlockInput
+}
+
 input BlockUpdateInput {
   height: Int
   timestamp: DateTime
   transactions: TransactionUpdateManyWithoutBlockInput
+}
+
+input BlockUpdateOneInput {
+  create: BlockCreateInput
+  connect: BlockWhereUniqueInput
+  delete: Boolean
+  update: BlockUpdateDataInput
+  upsert: BlockUpsertNestedInput
 }
 
 input BlockUpdateOneWithoutTransactionsInput {
@@ -135,6 +158,11 @@ input BlockUpdateOneWithoutTransactionsInput {
 input BlockUpdateWithoutTransactionsDataInput {
   height: Int
   timestamp: DateTime
+}
+
+input BlockUpsertNestedInput {
+  update: BlockUpdateDataInput!
+  create: BlockCreateInput!
 }
 
 input BlockUpsertWithoutTransactionsInput {
@@ -238,6 +266,9 @@ input BlockWhereInput {
   transactions_every: TransactionWhereInput
   transactions_some: TransactionWhereInput
   transactions_none: TransactionWhereInput
+  _MagicalBackRelation_BlockToNetworkStatistics_every: NetworkStatisticsWhereInput
+  _MagicalBackRelation_BlockToNetworkStatistics_some: NetworkStatisticsWhereInput
+  _MagicalBackRelation_BlockToNetworkStatistics_none: NetworkStatisticsWhereInput
 }
 
 input BlockWhereUniqueInput {
@@ -254,27 +285,180 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createBlock(data: BlockCreateInput!): Block!
   createTransaction(data: TransactionCreateInput!): Transaction!
+  createNetworkStatistics(data: NetworkStatisticsCreateInput!): NetworkStatistics!
   createPrice(data: PriceCreateInput!): Price!
-  updateBlock(data: BlockUpdateInput!, where: BlockWhereUniqueInput!): Block
+  createBlock(data: BlockCreateInput!): Block!
   updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): Transaction
-  deleteBlock(where: BlockWhereUniqueInput!): Block
+  updateBlock(data: BlockUpdateInput!, where: BlockWhereUniqueInput!): Block
   deleteTransaction(where: TransactionWhereUniqueInput!): Transaction
-  upsertBlock(where: BlockWhereUniqueInput!, create: BlockCreateInput!, update: BlockUpdateInput!): Block!
+  deleteBlock(where: BlockWhereUniqueInput!): Block
   upsertTransaction(where: TransactionWhereUniqueInput!, create: TransactionCreateInput!, update: TransactionUpdateInput!): Transaction!
-  updateManyBlocks(data: BlockUpdateInput!, where: BlockWhereInput): BatchPayload!
+  upsertBlock(where: BlockWhereUniqueInput!, create: BlockCreateInput!, update: BlockUpdateInput!): Block!
   updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput): BatchPayload!
+  updateManyNetworkStatisticses(data: NetworkStatisticsUpdateInput!, where: NetworkStatisticsWhereInput): BatchPayload!
   updateManyPrices(data: PriceUpdateInput!, where: PriceWhereInput): BatchPayload!
-  deleteManyBlocks(where: BlockWhereInput): BatchPayload!
+  updateManyBlocks(data: BlockUpdateInput!, where: BlockWhereInput): BatchPayload!
   deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
+  deleteManyNetworkStatisticses(where: NetworkStatisticsWhereInput): BatchPayload!
   deleteManyPrices(where: PriceWhereInput): BatchPayload!
+  deleteManyBlocks(where: BlockWhereInput): BatchPayload!
 }
 
 enum MutationType {
   CREATED
   UPDATED
   DELETED
+}
+
+type NetworkStatistics {
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
+  block(where: BlockWhereInput): Block!
+}
+
+"""A connection to a list of items."""
+type NetworkStatisticsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [NetworkStatisticsEdge]!
+  aggregate: AggregateNetworkStatistics!
+}
+
+input NetworkStatisticsCreateInput {
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
+  block: BlockCreateOneInput!
+}
+
+"""An edge in a connection."""
+type NetworkStatisticsEdge {
+  """The item at the end of the edge."""
+  node: NetworkStatistics!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum NetworkStatisticsOrderByInput {
+  secondsPerBlock_ASC
+  secondsPerBlock_DESC
+  transactionsPerSecond_ASC
+  transactionsPerSecond_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type NetworkStatisticsPreviousValues {
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
+}
+
+type NetworkStatisticsSubscriptionPayload {
+  mutation: MutationType!
+  node: NetworkStatistics
+  updatedFields: [String!]
+  previousValues: NetworkStatisticsPreviousValues
+}
+
+input NetworkStatisticsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [NetworkStatisticsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [NetworkStatisticsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [NetworkStatisticsSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: NetworkStatisticsWhereInput
+}
+
+input NetworkStatisticsUpdateInput {
+  secondsPerBlock: Float
+  transactionsPerSecond: Float
+  block: BlockUpdateOneInput
+}
+
+input NetworkStatisticsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [NetworkStatisticsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [NetworkStatisticsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [NetworkStatisticsWhereInput!]
+  secondsPerBlock: Float
+
+  """All values that are not equal to given value."""
+  secondsPerBlock_not: Float
+
+  """All values that are contained in given list."""
+  secondsPerBlock_in: [Float!]
+
+  """All values that are not contained in given list."""
+  secondsPerBlock_not_in: [Float!]
+
+  """All values less than the given value."""
+  secondsPerBlock_lt: Float
+
+  """All values less than or equal the given value."""
+  secondsPerBlock_lte: Float
+
+  """All values greater than the given value."""
+  secondsPerBlock_gt: Float
+
+  """All values greater than or equal the given value."""
+  secondsPerBlock_gte: Float
+  transactionsPerSecond: Float
+
+  """All values that are not equal to given value."""
+  transactionsPerSecond_not: Float
+
+  """All values that are contained in given list."""
+  transactionsPerSecond_in: [Float!]
+
+  """All values that are not contained in given list."""
+  transactionsPerSecond_not_in: [Float!]
+
+  """All values less than the given value."""
+  transactionsPerSecond_lt: Float
+
+  """All values less than or equal the given value."""
+  transactionsPerSecond_lte: Float
+
+  """All values greater than the given value."""
+  transactionsPerSecond_gt: Float
+
+  """All values greater than or equal the given value."""
+  transactionsPerSecond_gte: Float
+  block: BlockWhereInput
 }
 
 """An object with an ID"""
@@ -445,14 +629,16 @@ input PriceWhereInput {
 }
 
 type Query {
-  blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
   transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
+  networkStatisticses(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [NetworkStatistics]!
   prices(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Price]!
-  block(where: BlockWhereUniqueInput!): Block
+  blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
   transaction(where: TransactionWhereUniqueInput!): Transaction
-  blocksConnection(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BlockConnection!
+  block(where: BlockWhereUniqueInput!): Block
   transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
+  networkStatisticsesConnection(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NetworkStatisticsConnection!
   pricesConnection(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PriceConnection!
+  blocksConnection(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BlockConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -462,9 +648,10 @@ type Query {
 }
 
 type Subscription {
-  block(where: BlockSubscriptionWhereInput): BlockSubscriptionPayload
   transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
+  networkStatistics(where: NetworkStatisticsSubscriptionWhereInput): NetworkStatisticsSubscriptionPayload
   price(where: PriceSubscriptionWhereInput): PriceSubscriptionPayload
+  block(where: BlockSubscriptionWhereInput): BlockSubscriptionPayload
 }
 
 type Transaction implements Node {

@@ -101,6 +101,23 @@ function searchAutoComplete(parent, args, context, info) {
 }
 
 /**
+ * GraphQL resolver for network statistics query.
+ * @param {Object} parent The result object of the parent resolver.
+ * @param {Object} args The parameters for the query.
+ * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
+ * @param {Object} info An AST representation of the query.
+ * @return {Object} The scalar/object resolver result.
+ */
+function networkStatistics(parent, args, context, info) {
+  return context.db.query.networkStatisticses({ first: 1, orderBy: 'createdAt_DESC' }, info)
+    .then(res => {
+      if (!res.length)
+        throw new Error('No Network Statistics objects found.');
+      return res[0];
+    });
+}
+
+/**
  * GraphQL resolver for price query.
  * @param {Object} parent The result object of the parent resolver.
  * @param {Object} args The parameters for the query.

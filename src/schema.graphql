@@ -4,7 +4,7 @@
  # @license MIT License
  ##
 
-# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
+# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, NetworkStatisticsSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
 
 # Queries
 type Query {
@@ -14,6 +14,7 @@ type Query {
   transaction(hash: String!): Transaction
   searchGetType(query: String!): SearchGetTypeResult!
   searchAutoComplete(query: String!, first: Int): SearchAutoCompleteResult!
+  networkStatistics: NetworkStatistics!
   price: Price!
 }
 
@@ -22,6 +23,7 @@ type Query {
 # type Mutation {
 #  createBlock(height: Int!, timestamp: String!): Block!
 #  createTransaction(hash: String!, amount: Float!, blockId: ID!): Transaction!
+#  createNetworkStatistics(secondsPerBlock: Float!, transactionsPerSecond: Float!, blockHeight: Int!): NetworkStatistics!
 #  createPrice(timestamp: String!, price: Float!): Price!
 # }
 
@@ -29,6 +31,7 @@ type Query {
 type Subscription {
   block: BlockSubscriptionPayload
   transaction: TransactionSubscriptionPayload
+  networkStatistics: NetworkStatisticsSubscriptionPayload
   price: PriceSubscriptionPayload
 }
 
@@ -51,6 +54,13 @@ type Transaction implements Node {
   id: ID!
   hash: String!
   amount: Float!
+  block: Block!
+}
+
+# Represents DFINITY network statistics.
+type NetworkStatistics {
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
   block: Block!
 }
 

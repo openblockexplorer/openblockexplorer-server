@@ -57,11 +57,11 @@ module.exports = class PriceAgent {
           };
           this.prisma.mutation
             .createPrice({ data: price }, '{ price }')
-            .catch(error => { console.log(error); });
+            .catch(error => console.log(error));
         }
         else
           console.log("Exchange data not found.");
       })
-      .catch(error => { console.log(error); });
+      .catch(error => console.log(error));
   }
 };

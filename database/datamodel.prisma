@@ -17,6 +17,13 @@ type Transaction {
   block: Block!
 }
 
+# This type represents DFINITY network statistics.
+type NetworkStatistics {
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
+  block: Block!
+}
+
 # This type represents the DFN price at a given time.
 type Price {
   timestamp: DateTime!

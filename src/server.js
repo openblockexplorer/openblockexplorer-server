@@ -7,6 +7,7 @@
 const { GraphQLServer } = require('graphql-yoga');
 const { Prisma } = require('prisma-binding');
 const BlockProducer = require('./BlockProducer');
+const NetworkStatisticsAgent = require('./NetworkStatisticsAgent');
 const PriceAgent = require('./PriceAgent');
 const Query = require('./resolvers/query');
 // Do not expose mutations on deployed server.
@@ -35,6 +36,10 @@ const prisma = new Prisma({
   debug: false
 });
 
+// --- Notes on deploying Prisma service changes ---
+// After changing datamodel.prisma, run:
+//  $ prisma deploy
+//
 // --- Notes on using GraphQL Playground with Prisma server ---
 // The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
 //  prisma token
@@ -76,6 +81,10 @@ server.start(() => console.log('The server is running on port 4000...'));
 // Add simulated blocks to the Prisma server at 3.5 second intervals.
 const blockProducer = new BlockProducer(prisma);
 blockProducer.start();
+
+// Add network statistics information to the Prisma server for every block.
+const networkStatisticsAgent = new NetworkStatisticsAgent(prisma);
+networkStatisticsAgent.start();
 
 // Add DFN price information to the Prisma server at regular intervals.
 const priceAgent = new PriceAgent(prisma);
