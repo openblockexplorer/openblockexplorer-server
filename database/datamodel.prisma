@@ -18,38 +18,39 @@ type Transaction {
 }
 
 # This type represents daily DFINITY network statistics.
+# Remove this after all objects removed from database!!!
 type DailyNetworkStatistics {
   date: DateTime! @unique
   numBlocks: Int!
   numTransactions: Int!
 }
 
-# This type represents DFINITY network statistics.
-type NetworkStatistics {
-  secondsPerBlock: Float!
-  transactionsPerSecond: Float!
-  block: Block!
+# This type represents daily DFINITY network stats.
+type DailyNetworkStats {
+  date: DateTime! @unique
+  numBlocks: Int!
+  numTransactions: Int!
 }
 
 # This Enum represents the duration of time for a NetworkStats object.
-#enum NetworkStatsDuration {
-#  DURATION_10_MIN
-#}
+enum Duration {
+  MINUTES_10
+}
 
-# This type represents DFINITY network statistics.
-#type NetworkStats {
-#  duration: NetworkStatsDuration! @unique
-#  secondsPerBlock: Float!
-#  transactionsPerSecond: Float!
-#}
+# This type represents current DFINITY network stats over a duration of time.
+type NetworkStats {
+  duration: Duration! @unique
+  secondsPerBlock: Float!
+  transactionsPerSecond: Float!
+}
 
 # This Enum represents the type of currency for a Price object.
-#enum Currency {
-#  DFN
-#}
+enum Currency {
+  DFN
+}
 
-# This type represents the DFN price at a given time.
+# This type represents the current price of a currency.
 type Price {
-  timestamp: DateTime!
+  currency: Currency! @unique
   price: Float!
 }

@@ -1,15 +1,15 @@
 /**
- * @file NetworkStatisticsAgent
+ * @file NetworkStatsAgent
  * @copyright Copyright (c) 2018-2019 Dylan Miller and dfinityexplorer contributors
  * @license MIT License
  */
 
 /**
- * Agent that adds network statistics information to the Prisma server for every block.
+ * Agent that continuously updates network stats information on the Prisma server.
  */
-module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!!
+module.exports = class NetworkStatsAgent {
   /**
-   * Create a NetworkStatisticsAgent object.
+   * Create a NetworkStatsAgent object.
    * @param {Object} The Prisma binding object.
    * @constructor
    */
@@ -19,7 +19,7 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
 
     this.blocks = [];
     this.numTransactions = 0;
-    this.dailyNetworkStatistics = {
+    this.dailyNetworkStats = {
       date: this.getCurrentUTCDate(),
       numBlocks: 0,
       numTransactions: 0
@@ -27,7 +27,7 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
   }
 
   /**
-   * Start adding network statistics.
+   * Start updating network stats.
    * @public
    */
   start() {
@@ -41,8 +41,7 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
       }
     }`;
     
-    // If an error occurs, we simply log it, since we want the NetworkStatisticsAgent to keep
-    // running.
+    // If an error occurs, we simply log it, since we want the NetworkStatsAgent to keep running.
     this.prisma.subscription
       .block({ where: { mutation_in: ['CREATED'] } }, selectionSet)
       .then(subscription => this.subscriptionHandler(subscription))
@@ -50,15 +49,15 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
   }
 
   /**
-   * Handler for the block subscription, which adds a network statistics object to the Prisma server
-   * for every block.
+   * Handler for the block subscription, which adds a network stats object to the Prisma server for
+   * every block.
    * @param {Object} subscription The subscription object.
    * @private
    */
   async subscriptionHandler(subscription) {
     let result;
     do {
-      // Get next subscription result (IteratorResult<NetworkStatisticsSubscriptionPayload>).
+      // Get next subscription result (IteratorResult<BlockSubscriptionPayload>).
       result = await subscription.next();
 
       // Add a block object for this block to the blocks[] array.
@@ -74,9 +73,8 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
       this.numTransactions += block.numTransactions;
 
       // Remove blocks that have expired. The expiration is currently set to 10 minutes, so we
-      // calculate network statistics based on the past 10 minutes. We do this so that the
-      // statistics will reflect recent network activity, rather than being averaged across several
-      // hours.
+      // calculate network stats based on the past 10 minutes. We do this so that the stats will
+      // reflect recent network activity, rather than being averaged across several hours.
       const expireInOne10MinutesMs = 600000;
       const expiredDate = new Date(block.timestamp.getTime() - expireInOne10MinutesMs);
       while (this.blocks[0].timestamp < expiredDate) {
@@ -84,42 +82,43 @@ module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!
         this.blocks.shift();
       }
 
-      // Add a new network statistics object to the Prisma server. If an error occurs, we simply log
-      // it, since we want the NetworkStatisticsAgent to keep running.
+      // Add a new network stats object to the Prisma server.
       if (this.blocks.length >= 2) {
         const numBlocks = this.blocks[this.blocks.length-1].height - this.blocks[0].height;
         const seconds = (this.blocks[this.blocks.length-1].timestamp - this.blocks[0].timestamp) / 1000;
-        const networkStatistics = {
+        const networkStats = {
+          duration: 'MINUTES_10',
           secondsPerBlock: seconds / numBlocks,
-          transactionsPerSecond: this.numTransactions / seconds,
-          block: { connect: { height: block.height} }
+          transactionsPerSecond: this.numTransactions / seconds
         };
-        // It's overkill to create a new object for every block. We should change this to a single "current" or "10minutes" object!!!
-        // The same goes for price data, no need to create so many objects, just have one single object and update it!!!
-        // Change the subscriptions to key off of update instead of creation!!!
-        //!!!this.prisma.mutation
-        //!!!  .createNetworkStatistics({ data: networkStatistics }, '{ secondsPerBlock }');
-        //!!!  .catch(error => console.log(error));
+        this.prisma.mutation
+          .upsertNetworkStats(
+            {
+              where: { duration: 'MINUTES_10' },
+              create: networkStats,
+              update: networkStats
+            },
+            '{ duration }'
+          )
+          .catch(error => console.log(error));
       }
 
-      // Create/update the daily network statistics object on the Prisma server. If an error occurs,
-      // we simply log it, since we want the NetworkStatisticsAgent to keep running.
+      // Create/update the daily network stats object on the Prisma server.
       const date = this.getCurrentUTCDate();
-      if (date.getTime() !== this.dailyNetworkStatistics.date.getTime()) {
-        // We should overwrite this.dailyNetworkStatistics.date record with recalculated data from the past 24 hours, in case any blocks were missed!!!
-        // It actually does seem like blocks are sometimes missed!!!
-        this.dailyNetworkStatistics.date = date;
-        this.dailyNetworkStatistics.numBlocks = 0;
-        this.dailyNetworkStatistics.numTransactions = 0;
+      if (date.getTime() !== this.dailyNetworkStats.date.getTime()) {
+        // We should overwrite this.dailyNetworkStats.date record with recalculated data from the past 24 hours, since blocks seem to be missed!!!
+        this.dailyNetworkStats.date = date;
+        this.dailyNetworkStats.numBlocks = 0;
+        this.dailyNetworkStats.numTransactions = 0;
       }
-      this.dailyNetworkStatistics.numBlocks++;
-      this.dailyNetworkStatistics.numTransactions += block.numTransactions;
+      this.dailyNetworkStats.numBlocks++;
+      this.dailyNetworkStats.numTransactions += block.numTransactions;
       this.prisma.mutation
-        .upsertDailyNetworkStatistics(
+        .upsertDailyNetworkStats(
           {
-            where: { date: this.dailyNetworkStatistics.date },
-            create: this.dailyNetworkStatistics,
-            update: this.dailyNetworkStatistics
+            where: { date: this.dailyNetworkStats.date },
+            create: this.dailyNetworkStats,
+            update: this.dailyNetworkStats
           },
           '{ date }'
         )

@@ -7,7 +7,7 @@
 const axios = require('axios');
 
 /**
- * Agent that adds DFN price information to the Prisma server at regular intervals.
+ * Agent that continuously updates DFN price information on the Prisma server.
  */
 module.exports = class PriceAgent {
   /**
@@ -29,14 +29,14 @@ module.exports = class PriceAgent {
    */
   start() {
     // Add new price information using intervals.
-    setInterval(() => { this.addPrice() }, this.intervalTimeMs);
+    setInterval(() => { this.updatePrice() }, this.intervalTimeMs);
   }
 
   /**
-   * Add a new price to the Prisma server.
+   * Update the price object on the Prisma server.
    * @private
    */
-  addPrice() {
+  updatePrice() {
     // Until the DFINITY network launches, use the ETH price divided by 15 as a simulated DFN price.
     // If an error occurs, we simply log it, since we want the agent to keep running.
     const url =
@@ -47,18 +47,23 @@ module.exports = class PriceAgent {
           return obj.exchange === 'binance'
         });
         if (binance != undefined) {
-          // Use the current time rather than using binance.timestamp, since that timestamp often
-          // does not change between calls even when the price changes. If an error occurs we simply
-          // log it, since we want the PriceAgent to keep running.
-          const date = new Date();
+          // Create/update the price object on the Prisma server. If an error occurs, we simply log
+          // it, since we want the PriceAgent to keep running.
           const dfnPrice = parseFloat(binance.price) / 15;
           const price = {
-            timestamp: date,
+            currency: 'DFN',
             price: dfnPrice
           };
-          //!!!this.prisma.mutation
-          //!!!  .createPrice({ data: price }, '{ price }')
-          //!!!  .catch(error => console.log(error));
+          this.prisma.mutation
+            .upsertPrice(
+              {
+                where: { currency: 'DFN' },
+                create: price,
+                update: price
+              },
+              '{ currency }'
+            )
+            .catch(error => console.log(error));
         }
         else
           console.log("Exchange data not found.");

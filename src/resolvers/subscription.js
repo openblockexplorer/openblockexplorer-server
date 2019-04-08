@@ -37,20 +37,22 @@ function transactionSubscribe(parent, args, context, info) {
 const transaction = { subscribe: transactionSubscribe };
 
 /**
- * GraphQL resolver for network statistics subscription.
+ * GraphQL resolver for network stats subscription.
  * @param {Object} parent The result object of the parent resolver.
  * @param {Object} args The parameters for the subscription.
  * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
  * @param {Object} info An AST representation of the subscription.
  * @return {Object} The scalar/object resolver result.
  */
-function networkStatisticsSubscribe(parent, args, context, info) {
-  return context.db.subscription.networkStatistics(
-    { where: { mutation_in: ['CREATED'] } },
+function networkStatsSubscribe(parent, args, context, info) {
+  return context.db.subscription.networkStats(
+    { where: { mutation_in: ['UPDATED'] },
+      node: { duration: 'MINUTES_10' }
+    },
     info
   );
 }
-const networkStatistics = { subscribe: networkStatisticsSubscribe };
+const networkStats = { subscribe: networkStatsSubscribe };
 
 /**
  * GraphQL resolver for price subscription.
@@ -62,7 +64,9 @@ const networkStatistics = { subscribe: networkStatisticsSubscribe };
  */
 function priceSubscribe(parent, args, context, info) {
   return context.db.subscription.price(
-    { where: { mutation_in: ['CREATED'] } },
+    { where: { mutation_in: ['UPDATED'] },
+      node: { currency: 'DFN' }
+    },
     info
   );
 }
@@ -71,6 +75,6 @@ const price = { subscribe: priceSubscribe };
 module.exports = {
    block,
    transaction,
-   networkStatistics,
+   networkStats,
    price
 };

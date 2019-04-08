@@ -4,7 +4,7 @@
  # @license MIT License
  ##
 
-# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, DailyNetworkStatisticsOrderByInput, NetworkStatisticsSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
+# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, DailyNetworkStatsOrderByInput, NetworkStatsSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
 
 # Queries
 type Query {
@@ -14,8 +14,8 @@ type Query {
   transaction(hash: String!): Transaction
   searchGetType(query: String!): SearchGetTypeResult!
   searchAutoComplete(query: String!, first: Int): SearchAutoCompleteResult!
-  dailyNetworkStatisticses(last: Int, orderBy: DailyNetworkStatisticsOrderByInput): [DailyNetworkStatistics]!
-  networkStatistics: NetworkStatistics!
+  dailyNetworkStatses(last: Int, orderBy: DailyNetworkStatsOrderByInput): [DailyNetworkStats]!
+  networkStats: NetworkStats!
   price: Price!
 }
 
@@ -30,7 +30,7 @@ type Query {
 type Subscription {
   block: BlockSubscriptionPayload
   transaction: TransactionSubscriptionPayload
-  networkStatistics: NetworkStatisticsSubscriptionPayload
+  networkStats: NetworkStatsSubscriptionPayload
   price: PriceSubscriptionPayload
 }
 
@@ -56,23 +56,21 @@ type Transaction implements Node {
   block: Block!
 }
 
-# Represents DFINITY daily network statistics.
-type DailyNetworkStatistics {
+# Represents daily DFINITY network stats.
+type DailyNetworkStats {
   date: DateTime!
   numBlocks: Int!
   numTransactions: Int!
 }
 
-# Represents DFINITY network statistics.
-type NetworkStatistics {
+# Represents current DFINITY network stats.
+type NetworkStats {
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
-  block: Block!
 }
 
-# Represents the DFN price at a given time.
+# Represents the current DFN price.
 type Price {
-  timestamp: String!
   price: Float!
 }
 

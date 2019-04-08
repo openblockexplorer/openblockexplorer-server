@@ -7,7 +7,7 @@
 const { GraphQLServer } = require('graphql-yoga');
 const { Prisma } = require('prisma-binding');
 const BlockProducer = require('./BlockProducer');
-const NetworkStatisticsAgent = require('./NetworkStatisticsAgent');
+const NetworkStatsAgent = require('./NetworkStatsAgent');
 const PriceAgent = require('./PriceAgent');
 const Query = require('./resolvers/query');
 // Do not expose mutations on deployed server.
@@ -29,7 +29,7 @@ const resolvers = {
 
 const prisma = new Prisma({
   typeDefs: 'src/generated/prisma.graphql',
-  endpoint: 'https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev',
+  endpoint: 'https://dfinity-explorer.herokuapp.com/dfinity-explorer-b/dev',
   secret: process.env.PRISMA_SECRET,
   // Setting debug to true means that all requests made by Prisma binding instance to Prisma
   // API will be logged to the console. Set to false for production.
@@ -44,7 +44,7 @@ const prisma = new Prisma({
 // The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
 //  prisma token
 // Next, open the Prisma server URL in a browser:
-//  https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
+//  https://dfinity-explorer.herokuapp.com/dfinity-explorer-b/dev
 // Put this into the HTTP HEADERS field of GraphQL Playground:
 //  {
 //    "Authorization": "Bearer [token]"
@@ -82,10 +82,10 @@ server.start(() => console.log('The server is running on port 4000...'));
 const blockProducer = new BlockProducer(prisma);
 blockProducer.start();
 
-// Add network statistics information to the Prisma server for every block.
-const networkStatisticsAgent = new NetworkStatisticsAgent(prisma);
-networkStatisticsAgent.start();
+// Continuously update network stats information on the Prisma server.
+const networkStatsAgent = new NetworkStatsAgent(prisma);
+networkStatsAgent.start();
 
-// Add DFN price information to the Prisma server at regular intervals.
+// Continuously update DFN price information on the Prisma server.
 const priceAgent = new PriceAgent(prisma);
 priceAgent.start();

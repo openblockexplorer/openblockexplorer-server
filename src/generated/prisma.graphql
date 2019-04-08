@@ -1,6 +1,3 @@
-# source: https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
-# timestamp: Sun Mar 31 2019 09:02:01 GMT-0700 (PDT)
-
 type AggregateBlock {
   count: Int!
 }
@@ -9,7 +6,11 @@ type AggregateDailyNetworkStatistics {
   count: Int!
 }
 
-type AggregateNetworkStatistics {
+type AggregateDailyNetworkStats {
+  count: Int!
+}
+
+type AggregateNetworkStats {
   count: Int!
 }
 
@@ -22,23 +23,18 @@ type AggregateTransaction {
 }
 
 type BatchPayload {
-  """The number of nodes that have been affected by the Batch operation."""
   count: Long!
 }
 
-type Block implements Node {
+type Block {
   id: ID!
   height: Int!
   timestamp: DateTime!
   transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction!]
 }
 
-"""A connection to a list of items."""
 type BlockConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [BlockEdge]!
   aggregate: AggregateBlock!
 }
@@ -47,11 +43,6 @@ input BlockCreateInput {
   height: Int!
   timestamp: DateTime!
   transactions: TransactionCreateManyWithoutBlockInput
-}
-
-input BlockCreateOneInput {
-  create: BlockCreateInput
-  connect: BlockWhereUniqueInput
 }
 
 input BlockCreateOneWithoutTransactionsInput {
@@ -64,12 +55,8 @@ input BlockCreateWithoutTransactionsInput {
   timestamp: DateTime!
 }
 
-"""An edge in a connection."""
 type BlockEdge {
-  """The item at the end of the edge."""
   node: Block!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -80,10 +67,10 @@ enum BlockOrderByInput {
   height_DESC
   timestamp_ASC
   timestamp_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type BlockPreviousValues {
@@ -100,41 +87,14 @@ type BlockSubscriptionPayload {
 }
 
 input BlockSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [BlockSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [BlockSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [BlockSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: BlockWhereInput
-}
-
-input BlockUpdateDataInput {
-  height: Int
-  timestamp: DateTime
-  transactions: TransactionUpdateManyWithoutBlockInput
+  AND: [BlockSubscriptionWhereInput!]
+  OR: [BlockSubscriptionWhereInput!]
+  NOT: [BlockSubscriptionWhereInput!]
 }
 
 input BlockUpdateInput {
@@ -143,30 +103,21 @@ input BlockUpdateInput {
   transactions: TransactionUpdateManyWithoutBlockInput
 }
 
-input BlockUpdateOneInput {
-  create: BlockCreateInput
-  connect: BlockWhereUniqueInput
-  delete: Boolean
-  update: BlockUpdateDataInput
-  upsert: BlockUpsertNestedInput
+input BlockUpdateManyMutationInput {
+  height: Int
+  timestamp: DateTime
 }
 
-input BlockUpdateOneWithoutTransactionsInput {
+input BlockUpdateOneRequiredWithoutTransactionsInput {
   create: BlockCreateWithoutTransactionsInput
-  connect: BlockWhereUniqueInput
-  delete: Boolean
   update: BlockUpdateWithoutTransactionsDataInput
   upsert: BlockUpsertWithoutTransactionsInput
+  connect: BlockWhereUniqueInput
 }
 
 input BlockUpdateWithoutTransactionsDataInput {
   height: Int
   timestamp: DateTime
-}
-
-input BlockUpsertNestedInput {
-  update: BlockUpdateDataInput!
-  create: BlockCreateInput!
 }
 
 input BlockUpsertWithoutTransactionsInput {
@@ -175,109 +126,51 @@ input BlockUpsertWithoutTransactionsInput {
 }
 
 input BlockWhereInput {
-  """Logical AND on all given filters."""
-  AND: [BlockWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [BlockWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [BlockWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   height: Int
-
-  """All values that are not equal to given value."""
   height_not: Int
-
-  """All values that are contained in given list."""
   height_in: [Int!]
-
-  """All values that are not contained in given list."""
   height_not_in: [Int!]
-
-  """All values less than the given value."""
   height_lt: Int
-
-  """All values less than or equal the given value."""
   height_lte: Int
-
-  """All values greater than the given value."""
   height_gt: Int
-
-  """All values greater than or equal the given value."""
   height_gte: Int
   timestamp: DateTime
-
-  """All values that are not equal to given value."""
   timestamp_not: DateTime
-
-  """All values that are contained in given list."""
   timestamp_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   timestamp_not_in: [DateTime!]
-
-  """All values less than the given value."""
   timestamp_lt: DateTime
-
-  """All values less than or equal the given value."""
   timestamp_lte: DateTime
-
-  """All values greater than the given value."""
   timestamp_gt: DateTime
-
-  """All values greater than or equal the given value."""
   timestamp_gte: DateTime
   transactions_every: TransactionWhereInput
   transactions_some: TransactionWhereInput
   transactions_none: TransactionWhereInput
-  _MagicalBackRelation_BlockToNetworkStatistics_every: NetworkStatisticsWhereInput
-  _MagicalBackRelation_BlockToNetworkStatistics_some: NetworkStatisticsWhereInput
-  _MagicalBackRelation_BlockToNetworkStatistics_none: NetworkStatisticsWhereInput
+  AND: [BlockWhereInput!]
+  OR: [BlockWhereInput!]
+  NOT: [BlockWhereInput!]
 }
 
 input BlockWhereUniqueInput {
   id: ID
   height: Int
+}
+
+enum Currency {
+  DFN
 }
 
 type DailyNetworkStatistics {
@@ -286,12 +179,8 @@ type DailyNetworkStatistics {
   numTransactions: Int!
 }
 
-"""A connection to a list of items."""
 type DailyNetworkStatisticsConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [DailyNetworkStatisticsEdge]!
   aggregate: AggregateDailyNetworkStatistics!
 }
@@ -302,12 +191,8 @@ input DailyNetworkStatisticsCreateInput {
   numTransactions: Int!
 }
 
-"""An edge in a connection."""
 type DailyNetworkStatisticsEdge {
-  """The item at the end of the edge."""
   node: DailyNetworkStatistics!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -320,10 +205,10 @@ enum DailyNetworkStatisticsOrderByInput {
   numTransactions_DESC
   id_ASC
   id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type DailyNetworkStatisticsPreviousValues {
@@ -340,35 +225,14 @@ type DailyNetworkStatisticsSubscriptionPayload {
 }
 
 input DailyNetworkStatisticsSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [DailyNetworkStatisticsSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [DailyNetworkStatisticsSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [DailyNetworkStatisticsSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: DailyNetworkStatisticsWhereInput
+  AND: [DailyNetworkStatisticsSubscriptionWhereInput!]
+  OR: [DailyNetworkStatisticsSubscriptionWhereInput!]
+  NOT: [DailyNetworkStatisticsSubscriptionWhereInput!]
 }
 
 input DailyNetworkStatisticsUpdateInput {
@@ -377,120 +241,199 @@ input DailyNetworkStatisticsUpdateInput {
   numTransactions: Int
 }
 
-input DailyNetworkStatisticsWhereInput {
-  """Logical AND on all given filters."""
-  AND: [DailyNetworkStatisticsWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [DailyNetworkStatisticsWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [DailyNetworkStatisticsWhereInput!]
+input DailyNetworkStatisticsUpdateManyMutationInput {
   date: DateTime
+  numBlocks: Int
+  numTransactions: Int
+}
 
-  """All values that are not equal to given value."""
+input DailyNetworkStatisticsWhereInput {
+  date: DateTime
   date_not: DateTime
-
-  """All values that are contained in given list."""
   date_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   date_not_in: [DateTime!]
-
-  """All values less than the given value."""
   date_lt: DateTime
-
-  """All values less than or equal the given value."""
   date_lte: DateTime
-
-  """All values greater than the given value."""
   date_gt: DateTime
-
-  """All values greater than or equal the given value."""
   date_gte: DateTime
   numBlocks: Int
-
-  """All values that are not equal to given value."""
   numBlocks_not: Int
-
-  """All values that are contained in given list."""
   numBlocks_in: [Int!]
-
-  """All values that are not contained in given list."""
   numBlocks_not_in: [Int!]
-
-  """All values less than the given value."""
   numBlocks_lt: Int
-
-  """All values less than or equal the given value."""
   numBlocks_lte: Int
-
-  """All values greater than the given value."""
   numBlocks_gt: Int
-
-  """All values greater than or equal the given value."""
   numBlocks_gte: Int
   numTransactions: Int
-
-  """All values that are not equal to given value."""
   numTransactions_not: Int
-
-  """All values that are contained in given list."""
   numTransactions_in: [Int!]
-
-  """All values that are not contained in given list."""
   numTransactions_not_in: [Int!]
-
-  """All values less than the given value."""
   numTransactions_lt: Int
-
-  """All values less than or equal the given value."""
   numTransactions_lte: Int
-
-  """All values greater than the given value."""
   numTransactions_gt: Int
-
-  """All values greater than or equal the given value."""
   numTransactions_gte: Int
+  AND: [DailyNetworkStatisticsWhereInput!]
+  OR: [DailyNetworkStatisticsWhereInput!]
+  NOT: [DailyNetworkStatisticsWhereInput!]
 }
 
 input DailyNetworkStatisticsWhereUniqueInput {
   date: DateTime
 }
 
+type DailyNetworkStats {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+type DailyNetworkStatsConnection {
+  pageInfo: PageInfo!
+  edges: [DailyNetworkStatsEdge]!
+  aggregate: AggregateDailyNetworkStats!
+}
+
+input DailyNetworkStatsCreateInput {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+type DailyNetworkStatsEdge {
+  node: DailyNetworkStats!
+  cursor: String!
+}
+
+enum DailyNetworkStatsOrderByInput {
+  date_ASC
+  date_DESC
+  numBlocks_ASC
+  numBlocks_DESC
+  numTransactions_ASC
+  numTransactions_DESC
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type DailyNetworkStatsPreviousValues {
+  date: DateTime!
+  numBlocks: Int!
+  numTransactions: Int!
+}
+
+type DailyNetworkStatsSubscriptionPayload {
+  mutation: MutationType!
+  node: DailyNetworkStats
+  updatedFields: [String!]
+  previousValues: DailyNetworkStatsPreviousValues
+}
+
+input DailyNetworkStatsSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: DailyNetworkStatsWhereInput
+  AND: [DailyNetworkStatsSubscriptionWhereInput!]
+  OR: [DailyNetworkStatsSubscriptionWhereInput!]
+  NOT: [DailyNetworkStatsSubscriptionWhereInput!]
+}
+
+input DailyNetworkStatsUpdateInput {
+  date: DateTime
+  numBlocks: Int
+  numTransactions: Int
+}
+
+input DailyNetworkStatsUpdateManyMutationInput {
+  date: DateTime
+  numBlocks: Int
+  numTransactions: Int
+}
+
+input DailyNetworkStatsWhereInput {
+  date: DateTime
+  date_not: DateTime
+  date_in: [DateTime!]
+  date_not_in: [DateTime!]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_gt: DateTime
+  date_gte: DateTime
+  numBlocks: Int
+  numBlocks_not: Int
+  numBlocks_in: [Int!]
+  numBlocks_not_in: [Int!]
+  numBlocks_lt: Int
+  numBlocks_lte: Int
+  numBlocks_gt: Int
+  numBlocks_gte: Int
+  numTransactions: Int
+  numTransactions_not: Int
+  numTransactions_in: [Int!]
+  numTransactions_not_in: [Int!]
+  numTransactions_lt: Int
+  numTransactions_lte: Int
+  numTransactions_gt: Int
+  numTransactions_gte: Int
+  AND: [DailyNetworkStatsWhereInput!]
+  OR: [DailyNetworkStatsWhereInput!]
+  NOT: [DailyNetworkStatsWhereInput!]
+}
+
+input DailyNetworkStatsWhereUniqueInput {
+  date: DateTime
+}
+
 scalar DateTime
 
-"""
-The `Long` scalar type represents non-fractional signed whole numeric values.
-Long can represent values between -(2^63) and 2^63 - 1.
-"""
+enum Duration {
+  MINUTES_10
+}
+
 scalar Long
 
 type Mutation {
-  createTransaction(data: TransactionCreateInput!): Transaction!
-  createNetworkStatistics(data: NetworkStatisticsCreateInput!): NetworkStatistics!
-  createDailyNetworkStatistics(data: DailyNetworkStatisticsCreateInput!): DailyNetworkStatistics!
-  createPrice(data: PriceCreateInput!): Price!
   createBlock(data: BlockCreateInput!): Block!
-  updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): Transaction
-  updateDailyNetworkStatistics(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
   updateBlock(data: BlockUpdateInput!, where: BlockWhereUniqueInput!): Block
-  deleteTransaction(where: TransactionWhereUniqueInput!): Transaction
-  deleteDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
-  deleteBlock(where: BlockWhereUniqueInput!): Block
-  upsertTransaction(where: TransactionWhereUniqueInput!, create: TransactionCreateInput!, update: TransactionUpdateInput!): Transaction!
-  upsertDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!, create: DailyNetworkStatisticsCreateInput!, update: DailyNetworkStatisticsUpdateInput!): DailyNetworkStatistics!
+  updateManyBlocks(data: BlockUpdateManyMutationInput!, where: BlockWhereInput): BatchPayload!
   upsertBlock(where: BlockWhereUniqueInput!, create: BlockCreateInput!, update: BlockUpdateInput!): Block!
-  updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput): BatchPayload!
-  updateManyNetworkStatisticses(data: NetworkStatisticsUpdateInput!, where: NetworkStatisticsWhereInput): BatchPayload!
-  updateManyDailyNetworkStatisticses(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereInput): BatchPayload!
-  updateManyPrices(data: PriceUpdateInput!, where: PriceWhereInput): BatchPayload!
-  updateManyBlocks(data: BlockUpdateInput!, where: BlockWhereInput): BatchPayload!
-  deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
-  deleteManyNetworkStatisticses(where: NetworkStatisticsWhereInput): BatchPayload!
-  deleteManyDailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput): BatchPayload!
-  deleteManyPrices(where: PriceWhereInput): BatchPayload!
+  deleteBlock(where: BlockWhereUniqueInput!): Block
   deleteManyBlocks(where: BlockWhereInput): BatchPayload!
+  createDailyNetworkStatistics(data: DailyNetworkStatisticsCreateInput!): DailyNetworkStatistics!
+  updateDailyNetworkStatistics(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
+  updateManyDailyNetworkStatisticses(data: DailyNetworkStatisticsUpdateManyMutationInput!, where: DailyNetworkStatisticsWhereInput): BatchPayload!
+  upsertDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!, create: DailyNetworkStatisticsCreateInput!, update: DailyNetworkStatisticsUpdateInput!): DailyNetworkStatistics!
+  deleteDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
+  deleteManyDailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput): BatchPayload!
+  createDailyNetworkStats(data: DailyNetworkStatsCreateInput!): DailyNetworkStats!
+  updateDailyNetworkStats(data: DailyNetworkStatsUpdateInput!, where: DailyNetworkStatsWhereUniqueInput!): DailyNetworkStats
+  updateManyDailyNetworkStatses(data: DailyNetworkStatsUpdateManyMutationInput!, where: DailyNetworkStatsWhereInput): BatchPayload!
+  upsertDailyNetworkStats(where: DailyNetworkStatsWhereUniqueInput!, create: DailyNetworkStatsCreateInput!, update: DailyNetworkStatsUpdateInput!): DailyNetworkStats!
+  deleteDailyNetworkStats(where: DailyNetworkStatsWhereUniqueInput!): DailyNetworkStats
+  deleteManyDailyNetworkStatses(where: DailyNetworkStatsWhereInput): BatchPayload!
+  createNetworkStats(data: NetworkStatsCreateInput!): NetworkStats!
+  updateNetworkStats(data: NetworkStatsUpdateInput!, where: NetworkStatsWhereUniqueInput!): NetworkStats
+  updateManyNetworkStatses(data: NetworkStatsUpdateManyMutationInput!, where: NetworkStatsWhereInput): BatchPayload!
+  upsertNetworkStats(where: NetworkStatsWhereUniqueInput!, create: NetworkStatsCreateInput!, update: NetworkStatsUpdateInput!): NetworkStats!
+  deleteNetworkStats(where: NetworkStatsWhereUniqueInput!): NetworkStats
+  deleteManyNetworkStatses(where: NetworkStatsWhereInput): BatchPayload!
+  createPrice(data: PriceCreateInput!): Price!
+  updatePrice(data: PriceUpdateInput!, where: PriceWhereUniqueInput!): Price
+  updateManyPrices(data: PriceUpdateManyMutationInput!, where: PriceWhereInput): BatchPayload!
+  upsertPrice(where: PriceWhereUniqueInput!, create: PriceCreateInput!, update: PriceUpdateInput!): Price!
+  deletePrice(where: PriceWhereUniqueInput!): Price
+  deleteManyPrices(where: PriceWhereInput): BatchPayload!
+  createTransaction(data: TransactionCreateInput!): Transaction!
+  updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): Transaction
+  updateManyTransactions(data: TransactionUpdateManyMutationInput!, where: TransactionWhereInput): BatchPayload!
+  upsertTransaction(where: TransactionWhereUniqueInput!, create: TransactionCreateInput!, update: TransactionUpdateInput!): Transaction!
+  deleteTransaction(where: TransactionWhereUniqueInput!): Transaction
+  deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -499,221 +442,157 @@ enum MutationType {
   DELETED
 }
 
-type NetworkStatistics {
+type NetworkStats {
+  duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
-  block(where: BlockWhereInput): Block!
 }
 
-"""A connection to a list of items."""
-type NetworkStatisticsConnection {
-  """Information to aid in pagination."""
+type NetworkStatsConnection {
   pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [NetworkStatisticsEdge]!
-  aggregate: AggregateNetworkStatistics!
+  edges: [NetworkStatsEdge]!
+  aggregate: AggregateNetworkStats!
 }
 
-input NetworkStatisticsCreateInput {
+input NetworkStatsCreateInput {
+  duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
-  block: BlockCreateOneInput!
 }
 
-"""An edge in a connection."""
-type NetworkStatisticsEdge {
-  """The item at the end of the edge."""
-  node: NetworkStatistics!
-
-  """A cursor for use in pagination."""
+type NetworkStatsEdge {
+  node: NetworkStats!
   cursor: String!
 }
 
-enum NetworkStatisticsOrderByInput {
+enum NetworkStatsOrderByInput {
+  duration_ASC
+  duration_DESC
   secondsPerBlock_ASC
   secondsPerBlock_DESC
   transactionsPerSecond_ASC
   transactionsPerSecond_DESC
   id_ASC
   id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
-type NetworkStatisticsPreviousValues {
+type NetworkStatsPreviousValues {
+  duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
 }
 
-type NetworkStatisticsSubscriptionPayload {
+type NetworkStatsSubscriptionPayload {
   mutation: MutationType!
-  node: NetworkStatistics
+  node: NetworkStats
   updatedFields: [String!]
-  previousValues: NetworkStatisticsPreviousValues
+  previousValues: NetworkStatsPreviousValues
 }
 
-input NetworkStatisticsSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NetworkStatisticsSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NetworkStatisticsSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NetworkStatisticsSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
+input NetworkStatsSubscriptionWhereInput {
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
-  node: NetworkStatisticsWhereInput
+  node: NetworkStatsWhereInput
+  AND: [NetworkStatsSubscriptionWhereInput!]
+  OR: [NetworkStatsSubscriptionWhereInput!]
+  NOT: [NetworkStatsSubscriptionWhereInput!]
 }
 
-input NetworkStatisticsUpdateInput {
+input NetworkStatsUpdateInput {
+  duration: Duration
   secondsPerBlock: Float
   transactionsPerSecond: Float
-  block: BlockUpdateOneInput
 }
 
-input NetworkStatisticsWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NetworkStatisticsWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NetworkStatisticsWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NetworkStatisticsWhereInput!]
+input NetworkStatsUpdateManyMutationInput {
+  duration: Duration
   secondsPerBlock: Float
+  transactionsPerSecond: Float
+}
 
-  """All values that are not equal to given value."""
+input NetworkStatsWhereInput {
+  duration: Duration
+  duration_not: Duration
+  duration_in: [Duration!]
+  duration_not_in: [Duration!]
+  secondsPerBlock: Float
   secondsPerBlock_not: Float
-
-  """All values that are contained in given list."""
   secondsPerBlock_in: [Float!]
-
-  """All values that are not contained in given list."""
   secondsPerBlock_not_in: [Float!]
-
-  """All values less than the given value."""
   secondsPerBlock_lt: Float
-
-  """All values less than or equal the given value."""
   secondsPerBlock_lte: Float
-
-  """All values greater than the given value."""
   secondsPerBlock_gt: Float
-
-  """All values greater than or equal the given value."""
   secondsPerBlock_gte: Float
   transactionsPerSecond: Float
-
-  """All values that are not equal to given value."""
   transactionsPerSecond_not: Float
-
-  """All values that are contained in given list."""
   transactionsPerSecond_in: [Float!]
-
-  """All values that are not contained in given list."""
   transactionsPerSecond_not_in: [Float!]
-
-  """All values less than the given value."""
   transactionsPerSecond_lt: Float
-
-  """All values less than or equal the given value."""
   transactionsPerSecond_lte: Float
-
-  """All values greater than the given value."""
   transactionsPerSecond_gt: Float
-
-  """All values greater than or equal the given value."""
   transactionsPerSecond_gte: Float
-  block: BlockWhereInput
+  AND: [NetworkStatsWhereInput!]
+  OR: [NetworkStatsWhereInput!]
+  NOT: [NetworkStatsWhereInput!]
 }
 
-"""An object with an ID"""
+input NetworkStatsWhereUniqueInput {
+  duration: Duration
+}
+
 interface Node {
-  """The id of the object."""
   id: ID!
 }
 
-"""Information about pagination in a connection."""
 type PageInfo {
-  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
   startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
 type Price {
-  timestamp: DateTime!
+  currency: Currency!
   price: Float!
 }
 
-"""A connection to a list of items."""
 type PriceConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [PriceEdge]!
   aggregate: AggregatePrice!
 }
 
 input PriceCreateInput {
-  timestamp: DateTime!
+  currency: Currency!
   price: Float!
 }
 
-"""An edge in a connection."""
 type PriceEdge {
-  """The item at the end of the edge."""
   node: Price!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
 enum PriceOrderByInput {
-  timestamp_ASC
-  timestamp_DESC
+  currency_ASC
+  currency_DESC
   price_ASC
   price_DESC
   id_ASC
   id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type PricePreviousValues {
-  timestamp: DateTime!
+  currency: Currency!
   price: Float!
 }
 
@@ -725,140 +604,88 @@ type PriceSubscriptionPayload {
 }
 
 input PriceSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PriceSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PriceSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PriceSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: PriceWhereInput
+  AND: [PriceSubscriptionWhereInput!]
+  OR: [PriceSubscriptionWhereInput!]
+  NOT: [PriceSubscriptionWhereInput!]
 }
 
 input PriceUpdateInput {
-  timestamp: DateTime
+  currency: Currency
+  price: Float
+}
+
+input PriceUpdateManyMutationInput {
+  currency: Currency
   price: Float
 }
 
 input PriceWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PriceWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PriceWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PriceWhereInput!]
-  timestamp: DateTime
-
-  """All values that are not equal to given value."""
-  timestamp_not: DateTime
-
-  """All values that are contained in given list."""
-  timestamp_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  timestamp_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  timestamp_lt: DateTime
-
-  """All values less than or equal the given value."""
-  timestamp_lte: DateTime
-
-  """All values greater than the given value."""
-  timestamp_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  timestamp_gte: DateTime
+  currency: Currency
+  currency_not: Currency
+  currency_in: [Currency!]
+  currency_not_in: [Currency!]
   price: Float
-
-  """All values that are not equal to given value."""
   price_not: Float
-
-  """All values that are contained in given list."""
   price_in: [Float!]
-
-  """All values that are not contained in given list."""
   price_not_in: [Float!]
-
-  """All values less than the given value."""
   price_lt: Float
-
-  """All values less than or equal the given value."""
   price_lte: Float
-
-  """All values greater than the given value."""
   price_gt: Float
-
-  """All values greater than or equal the given value."""
   price_gte: Float
+  AND: [PriceWhereInput!]
+  OR: [PriceWhereInput!]
+  NOT: [PriceWhereInput!]
+}
+
+input PriceWhereUniqueInput {
+  currency: Currency
 }
 
 type Query {
-  transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
-  networkStatisticses(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [NetworkStatistics]!
-  dailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStatistics]!
-  prices(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Price]!
-  blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
-  transaction(where: TransactionWhereUniqueInput!): Transaction
-  dailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
   block(where: BlockWhereUniqueInput!): Block
-  transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
-  networkStatisticsesConnection(where: NetworkStatisticsWhereInput, orderBy: NetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NetworkStatisticsConnection!
-  dailyNetworkStatisticsesConnection(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatisticsConnection!
-  pricesConnection(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PriceConnection!
+  blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
   blocksConnection(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BlockConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  dailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
+  dailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStatistics]!
+  dailyNetworkStatisticsesConnection(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatisticsConnection!
+  dailyNetworkStats(where: DailyNetworkStatsWhereUniqueInput!): DailyNetworkStats
+  dailyNetworkStatses(where: DailyNetworkStatsWhereInput, orderBy: DailyNetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStats]!
+  dailyNetworkStatsesConnection(where: DailyNetworkStatsWhereInput, orderBy: DailyNetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatsConnection!
+  networkStats(where: NetworkStatsWhereUniqueInput!): NetworkStats
+  networkStatses(where: NetworkStatsWhereInput, orderBy: NetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [NetworkStats]!
+  networkStatsesConnection(where: NetworkStatsWhereInput, orderBy: NetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NetworkStatsConnection!
+  price(where: PriceWhereUniqueInput!): Price
+  prices(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Price]!
+  pricesConnection(where: PriceWhereInput, orderBy: PriceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PriceConnection!
+  transaction(where: TransactionWhereUniqueInput!): Transaction
+  transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
+  transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
+  node(id: ID!): Node
 }
 
 type Subscription {
-  transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
-  networkStatistics(where: NetworkStatisticsSubscriptionWhereInput): NetworkStatisticsSubscriptionPayload
-  dailyNetworkStatistics(where: DailyNetworkStatisticsSubscriptionWhereInput): DailyNetworkStatisticsSubscriptionPayload
-  price(where: PriceSubscriptionWhereInput): PriceSubscriptionPayload
   block(where: BlockSubscriptionWhereInput): BlockSubscriptionPayload
+  dailyNetworkStatistics(where: DailyNetworkStatisticsSubscriptionWhereInput): DailyNetworkStatisticsSubscriptionPayload
+  dailyNetworkStats(where: DailyNetworkStatsSubscriptionWhereInput): DailyNetworkStatsSubscriptionPayload
+  networkStats(where: NetworkStatsSubscriptionWhereInput): NetworkStatsSubscriptionPayload
+  price(where: PriceSubscriptionWhereInput): PriceSubscriptionPayload
+  transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
 }
 
-type Transaction implements Node {
+type Transaction {
   id: ID!
   hash: String!
   amount: Float!
-  block(where: BlockWhereInput): Block!
+  block: Block!
 }
 
-"""A connection to a list of items."""
 type TransactionConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [TransactionEdge]!
   aggregate: AggregateTransaction!
 }
@@ -879,12 +706,8 @@ input TransactionCreateWithoutBlockInput {
   amount: Float!
 }
 
-"""An edge in a connection."""
 type TransactionEdge {
-  """The item at the end of the edge."""
   node: Transaction!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -895,16 +718,58 @@ enum TransactionOrderByInput {
   hash_DESC
   amount_ASC
   amount_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type TransactionPreviousValues {
   id: ID!
   hash: String!
   amount: Float!
+}
+
+input TransactionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  hash: String
+  hash_not: String
+  hash_in: [String!]
+  hash_not_in: [String!]
+  hash_lt: String
+  hash_lte: String
+  hash_gt: String
+  hash_gte: String
+  hash_contains: String
+  hash_not_contains: String
+  hash_starts_with: String
+  hash_not_starts_with: String
+  hash_ends_with: String
+  hash_not_ends_with: String
+  amount: Float
+  amount_not: Float
+  amount_in: [Float!]
+  amount_not_in: [Float!]
+  amount_lt: Float
+  amount_lte: Float
+  amount_gt: Float
+  amount_gte: Float
+  AND: [TransactionScalarWhereInput!]
+  OR: [TransactionScalarWhereInput!]
+  NOT: [TransactionScalarWhereInput!]
 }
 
 type TransactionSubscriptionPayload {
@@ -915,50 +780,47 @@ type TransactionSubscriptionPayload {
 }
 
 input TransactionSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [TransactionSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [TransactionSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [TransactionSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: TransactionWhereInput
+  AND: [TransactionSubscriptionWhereInput!]
+  OR: [TransactionSubscriptionWhereInput!]
+  NOT: [TransactionSubscriptionWhereInput!]
 }
 
 input TransactionUpdateInput {
   hash: String
   amount: Float
-  block: BlockUpdateOneWithoutTransactionsInput
+  block: BlockUpdateOneRequiredWithoutTransactionsInput
+}
+
+input TransactionUpdateManyDataInput {
+  hash: String
+  amount: Float
+}
+
+input TransactionUpdateManyMutationInput {
+  hash: String
+  amount: Float
 }
 
 input TransactionUpdateManyWithoutBlockInput {
   create: [TransactionCreateWithoutBlockInput!]
-  connect: [TransactionWhereUniqueInput!]
-  disconnect: [TransactionWhereUniqueInput!]
   delete: [TransactionWhereUniqueInput!]
+  connect: [TransactionWhereUniqueInput!]
+  set: [TransactionWhereUniqueInput!]
+  disconnect: [TransactionWhereUniqueInput!]
   update: [TransactionUpdateWithWhereUniqueWithoutBlockInput!]
   upsert: [TransactionUpsertWithWhereUniqueWithoutBlockInput!]
+  deleteMany: [TransactionScalarWhereInput!]
+  updateMany: [TransactionUpdateManyWithWhereNestedInput!]
+}
+
+input TransactionUpdateManyWithWhereNestedInput {
+  where: TransactionScalarWhereInput!
+  data: TransactionUpdateManyDataInput!
 }
 
 input TransactionUpdateWithoutBlockDataInput {
@@ -978,117 +840,46 @@ input TransactionUpsertWithWhereUniqueWithoutBlockInput {
 }
 
 input TransactionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [TransactionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [TransactionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [TransactionWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   hash: String
-
-  """All values that are not equal to given value."""
   hash_not: String
-
-  """All values that are contained in given list."""
   hash_in: [String!]
-
-  """All values that are not contained in given list."""
   hash_not_in: [String!]
-
-  """All values less than the given value."""
   hash_lt: String
-
-  """All values less than or equal the given value."""
   hash_lte: String
-
-  """All values greater than the given value."""
   hash_gt: String
-
-  """All values greater than or equal the given value."""
   hash_gte: String
-
-  """All values containing the given string."""
   hash_contains: String
-
-  """All values not containing the given string."""
   hash_not_contains: String
-
-  """All values starting with the given string."""
   hash_starts_with: String
-
-  """All values not starting with the given string."""
   hash_not_starts_with: String
-
-  """All values ending with the given string."""
   hash_ends_with: String
-
-  """All values not ending with the given string."""
   hash_not_ends_with: String
   amount: Float
-
-  """All values that are not equal to given value."""
   amount_not: Float
-
-  """All values that are contained in given list."""
   amount_in: [Float!]
-
-  """All values that are not contained in given list."""
   amount_not_in: [Float!]
-
-  """All values less than the given value."""
   amount_lt: Float
-
-  """All values less than or equal the given value."""
   amount_lte: Float
-
-  """All values greater than the given value."""
   amount_gt: Float
-
-  """All values greater than or equal the given value."""
   amount_gte: Float
   block: BlockWhereInput
+  AND: [TransactionWhereInput!]
+  OR: [TransactionWhereInput!]
+  NOT: [TransactionWhereInput!]
 }
 
 input TransactionWhereUniqueInput {

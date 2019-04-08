@@ -101,32 +101,27 @@ function searchAutoComplete(parent, args, context, info) {
 }
 
 /**
- * GraphQL resolver for daily network statistics query.
+ * GraphQL resolver for daily network stats query.
  * @param {Object} parent The result object of the parent resolver.
  * @param {Object} args The parameters for the query.
  * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
  * @param {Object} info An AST representation of the query.
  * @return {Object} The scalar/object resolver result.
  */
-function dailyNetworkStatisticses(parent, args, context, info) {
-  return context.db.query.dailyNetworkStatisticses({ last: args.last, orderBy: args.orderBy }, info);
+function dailyNetworkStatses(parent, args, context, info) {
+  return context.db.query.dailyNetworkStatses({ last: args.last, orderBy: args.orderBy }, info);
 }
 
 /**
- * GraphQL resolver for network statistics query.
+ * GraphQL resolver for network stats query.
  * @param {Object} parent The result object of the parent resolver.
  * @param {Object} args The parameters for the query.
  * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
  * @param {Object} info An AST representation of the query.
  * @return {Object} The scalar/object resolver result.
  */
-function networkStatistics(parent, args, context, info) {
-  return context.db.query.networkStatisticses({ first: 1, orderBy: 'createdAt_DESC' }, info)
-    .then(res => {
-      if (!res.length)
-        throw new Error('No Network Statistics objects found.');
-      return res[0];
-    });
+function networkStats(parent, args, context, info) {
+  return context.db.query.networkStats({ where: { duration: 'MINUTES_10' } }, info);
 }
 
 /**
@@ -138,12 +133,7 @@ function networkStatistics(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 function price(parent, args, context, info) {
-  return context.db.query.prices({ first: 1, orderBy: 'createdAt_DESC' }, info)
-    .then(res => {
-      if (!res.length)
-        throw new Error('No Price objects found.');
-      return res[0];
-    });
+  return context.db.query.price({ where: { currency: CurrencyDFN } }, info);
 }
 
 module.exports = {
@@ -153,7 +143,7 @@ module.exports = {
   transaction,
   searchGetType,
   searchAutoComplete,
-  dailyNetworkStatisticses,
-  networkStatistics,
+  dailyNetworkStatses,
+  networkStats,
   price
 };

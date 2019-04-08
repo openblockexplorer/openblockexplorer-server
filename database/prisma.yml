@@ -1,6 +1,11 @@
-endpoint: https://dfinity-explorer.herokuapp.com/dfinity-explorer/dev
+endpoint: https://dfinity-explorer.herokuapp.com/dfinity-explorer-b/dev
 datamodel: datamodel.prisma
 secret: ${env:PRISMA_SECRET}
+
+generate:
+  - generator: graphql-schema
+    output: ../src/generated/prisma.graphql
+
 hooks:
   post-deploy:
-    - graphql get-schema --project database
+    - prisma generate
