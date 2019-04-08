@@ -106,7 +106,7 @@ module.exports = class NetworkStatsAgent {
           .updateNetworkStats(
             {
               where: { duration: 'MINUTES_10' },
-              data: networkStats,
+              data: networkStats
             },
             '{ duration }'
           )
