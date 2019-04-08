@@ -31,6 +31,23 @@ type NetworkStatistics {
   block: Block!
 }
 
+# This Enum represents the duration of time for a NetworkStats object.
+#enum NetworkStatsDuration {
+#  DURATION_10_MIN
+#}
+
+# This type represents DFINITY network statistics.
+#type NetworkStats {
+#  duration: NetworkStatsDuration! @unique
+#  secondsPerBlock: Float!
+#  transactionsPerSecond: Float!
+#}
+
+# This Enum represents the type of currency for a Price object.
+#enum Currency {
+#  DFN
+#}
+
 # This type represents the DFN price at a given time.
 type Price {
   timestamp: DateTime!

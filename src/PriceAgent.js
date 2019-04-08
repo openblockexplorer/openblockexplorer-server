@@ -48,16 +48,17 @@ module.exports = class PriceAgent {
         });
         if (binance != undefined) {
           // Use the current time rather than using binance.timestamp, since that timestamp often
-          // does not change between calls even when the price changes.
+          // does not change between calls even when the price changes. If an error occurs we simply
+          // log it, since we want the PriceAgent to keep running.
           const date = new Date();
           const dfnPrice = parseFloat(binance.price) / 15;
           const price = {
             timestamp: date,
             price: dfnPrice
           };
-          this.prisma.mutation
-            .createPrice({ data: price }, '{ price }')
-            .catch(error => console.log(error));
+          //!!!this.prisma.mutation
+          //!!!  .createPrice({ data: price }, '{ price }')
+          //!!!  .catch(error => console.log(error));
         }
         else
           console.log("Exchange data not found.");

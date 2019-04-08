@@ -7,7 +7,7 @@
 /**
  * Agent that adds network statistics information to the Prisma server for every block.
  */
-module.exports = class NetworkStatisticsAgent {
+module.exports = class NetworkStatisticsAgent { // Rename to NetworkStatsAgent!!!
   /**
    * Create a NetworkStatisticsAgent object.
    * @param {Object} The Prisma binding object.
@@ -84,7 +84,8 @@ module.exports = class NetworkStatisticsAgent {
         this.blocks.shift();
       }
 
-      // Add a new network statistics object to the Prisma server.
+      // Add a new network statistics object to the Prisma server. If an error occurs, we simply log
+      // it, since we want the NetworkStatisticsAgent to keep running.
       if (this.blocks.length >= 2) {
         const numBlocks = this.blocks[this.blocks.length-1].height - this.blocks[0].height;
         const seconds = (this.blocks[this.blocks.length-1].timestamp - this.blocks[0].timestamp) / 1000;
@@ -93,13 +94,20 @@ module.exports = class NetworkStatisticsAgent {
           transactionsPerSecond: this.numTransactions / seconds,
           block: { connect: { height: block.height} }
         };
-        this.prisma.mutation
-          .createNetworkStatistics({ data: networkStatistics }, '{ secondsPerBlock }');
+        // It's overkill to create a new object for every block. We should change this to a single "current" or "10minutes" object!!!
+        // The same goes for price data, no need to create so many objects, just have one single object and update it!!!
+        // Change the subscriptions to key off of update instead of creation!!!
+        //!!!this.prisma.mutation
+        //!!!  .createNetworkStatistics({ data: networkStatistics }, '{ secondsPerBlock }');
+        //!!!  .catch(error => console.log(error));
       }
 
-      // Create/update the daily network statistics object on the Prisma server.
+      // Create/update the daily network statistics object on the Prisma server. If an error occurs,
+      // we simply log it, since we want the NetworkStatisticsAgent to keep running.
       const date = this.getCurrentUTCDate();
       if (date.getTime() !== this.dailyNetworkStatistics.date.getTime()) {
+        // We should overwrite this.dailyNetworkStatistics.date record with recalculated data from the past 24 hours, in case any blocks were missed!!!
+        // It actually does seem like blocks are sometimes missed!!!
         this.dailyNetworkStatistics.date = date;
         this.dailyNetworkStatistics.numBlocks = 0;
         this.dailyNetworkStatistics.numTransactions = 0;
@@ -114,7 +122,8 @@ module.exports = class NetworkStatisticsAgent {
             update: this.dailyNetworkStatistics
           },
           '{ date }'
-        );
+        )
+        .catch(error => console.log(error));
     }
     while (!result.done);
   }
