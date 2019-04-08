@@ -133,7 +133,7 @@ function networkStats(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 function price(parent, args, context, info) {
-  return context.db.query.price({ where: { currency: CurrencyDFN } }, info);
+  return context.db.query.price({ where: { currency: 'DFN' } }, info);
 }
 
 module.exports = {
