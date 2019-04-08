@@ -91,12 +91,22 @@ module.exports = class NetworkStatsAgent {
           secondsPerBlock: seconds / numBlocks,
           transactionsPerSecond: this.numTransactions / seconds
         };
+        // Use update instead of upsert, since subscription does not trigger on upsert. Seems
+        // like the following issue, which was supposedly resolved:
+        // https://github.com/prisma/prisma/issues/2532
         this.prisma.mutation
-          .upsertNetworkStats(
+          // .upsertNetworkStats(
+          //   {
+          //     where: { duration: 'MINUTES_10' },
+          //     create: networkStats,
+          //     update: networkStats
+          //   },
+          //   '{ duration }'
+          // )
+          .updateNetworkStats(
             {
               where: { duration: 'MINUTES_10' },
-              create: networkStats,
-              update: networkStats
+              data: networkStats,
             },
             '{ duration }'
           )

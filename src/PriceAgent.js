@@ -54,12 +54,22 @@ module.exports = class PriceAgent {
             currency: 'DFN',
             price: dfnPrice
           };
+          // Use update instead of upsert, since subscription does not trigger on upsert. Seems
+          // like the following issue, which was supposedly resolved:
+          // https://github.com/prisma/prisma/issues/2532
           this.prisma.mutation
-            .upsertPrice(
+            // .upsertPrice(
+            //   {
+            //     where: { currency: 'DFN' },
+            //     create: price,
+            //     update: price
+            //   },
+            //   '{ currency }'
+            // )
+            .updatePrice(
               {
                 where: { currency: 'DFN' },
-                create: price,
-                update: price
+                data: price
               },
               '{ currency }'
             )
