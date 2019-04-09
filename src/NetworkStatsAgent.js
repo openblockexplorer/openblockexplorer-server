@@ -24,6 +24,7 @@ module.exports = class NetworkStatsAgent {
       numBlocks: 0,
       numTransactions: 0
     };
+    this.lastBlockHeight = 0;//!!!
   }
 
   /**
@@ -113,6 +114,16 @@ module.exports = class NetworkStatsAgent {
           .catch(error => console.log(error));
       }
 
+      //!!!
+      if (this.lastBlockHeight === 0) {
+        console.log(`NetworkStatsAgent started: this.lastBlockHeight(0)`);
+      }
+      else if (block.height !== this.lastBlockHeight + 1) {
+        console.log(`NetworkStatsAgent missed blocks: block.height(${block.height}) != lastBlockHeight(${this.lastBlockHeight}) + 1`);
+      }
+      this.lastBlockHeight = block.height;
+      //!!!
+
       // Create/update the daily network stats object on the Prisma server.
       const date = this.getCurrentUTCDate();
       if (date.getTime() !== this.dailyNetworkStats.date.getTime()) {
@@ -120,6 +131,7 @@ module.exports = class NetworkStatsAgent {
         this.dailyNetworkStats.date = date;
         this.dailyNetworkStats.numBlocks = 0;
         this.dailyNetworkStats.numTransactions = 0;
+        console.log(`NetworkStatsAgent new day: dailyNetworkStats reset`);//!!!
       }
       this.dailyNetworkStats.numBlocks++;
       this.dailyNetworkStats.numTransactions += block.numTransactions;
