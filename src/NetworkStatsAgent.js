@@ -118,18 +118,54 @@ module.exports = class NetworkStatsAgent {
       //!!!
       if (this.lastBlockHeight === 0) {
         this.startBlockHeight = block.height;
-        console.log(`NetworkStatsAgent started: startBlockHeight(${block.height}, this.lastBlockHeight(0)`);
+        console.log(`NetworkStatsAgent started: startBlockHeight(${block.height}), this.lastBlockHeight(0)`);
       }
       else if (block.height !== this.lastBlockHeight + 1) {
         console.log(`NetworkStatsAgent missed blocks: block.height(${block.height}) != lastBlockHeight(${this.lastBlockHeight}) + 1`);
       }
       this.lastBlockHeight = block.height;
+
+      // Process restarted, calculate daily network stats. The blocksConnection and
+      // transactionsConnection operations are slow, so change this code if we come up with a faster
+      // way to get the daily numBlocks and numTransactions.
+      if (this.dailyNetworkStats.numBlocks === 0) {
+        let connection = await this.prisma.query
+          .blocksConnection(
+            {
+              where: {
+                AND: [
+                  {timestamp_gt: this.dailyNetworkStats.date},
+                  {height_lt: block.height}
+                ]
+              }
+            },
+            '{ aggregate { count } }')
+          .catch(error => console.log(error));
+        this.dailyNetworkStats.numBlocks = connection.aggregate.count;
+        console.log(`blocksConnection blocks: ${this.dailyNetworkStats.numBlocks}`)
+        connection = await this.prisma.query
+          .transactionsConnection(
+            {
+              where: {
+                block: {
+                  AND: [
+                    {timestamp_gt: this.dailyNetworkStats.date},
+                    {height_lt: block.height}
+                  ]
+                }
+              }
+            },
+            '{ aggregate { count } }')
+          .catch(error => console.log(error));
+        this.dailyNetworkStats.numTransactions = connection.aggregate.count;
+        console.log(`transactionsConnection transactions: ${this.dailyNetworkStats.numTransactions}`)
+        this.startBlockHeight = block.height - this.dailyNetworkStats.numBlocks;//!!!
+      }
       //!!!
 
       // Create/update the daily network stats object on the Prisma server.
       const date = this.getCurrentUTCDate();
       if (date.getTime() !== this.dailyNetworkStats.date.getTime()) {
-        // We should overwrite this.dailyNetworkStats.date record with recalculated data from the past 24 hours, since blocks seem to be missed!!!
         this.dailyNetworkStats.date = date;
         this.dailyNetworkStats.numBlocks = 0;
         this.dailyNetworkStats.numTransactions = 0;
@@ -139,7 +175,7 @@ module.exports = class NetworkStatsAgent {
       this.dailyNetworkStats.numBlocks++;
       //!!!
       if ((this.dailyNetworkStats.numBlocks % 100) == 0 ||
-        (this.dailyNetworkStats.numBlocks < 100 && 
+        (this.numTransactions < 400 && 
           (this.dailyNetworkStats.numBlocks  % 10) == 0)) {
         const actualNumBlocks = block.height - this.startBlockHeight + 1;
         console.log(
