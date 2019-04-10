@@ -24,6 +24,7 @@ module.exports = class NetworkStatsAgent {
       numBlocks: 0,
       numTransactions: 0
     };
+    this.startBlockHeight = 0;//!!!
     this.lastBlockHeight = 0;//!!!
   }
 
@@ -116,7 +117,8 @@ module.exports = class NetworkStatsAgent {
 
       //!!!
       if (this.lastBlockHeight === 0) {
-        console.log(`NetworkStatsAgent started: this.lastBlockHeight(0)`);
+        this.startBlockHeight = block.height;
+        console.log(`NetworkStatsAgent started: startBlockHeight(${block.height}, this.lastBlockHeight(0)`);
       }
       else if (block.height !== this.lastBlockHeight + 1) {
         console.log(`NetworkStatsAgent missed blocks: block.height(${block.height}) != lastBlockHeight(${this.lastBlockHeight}) + 1`);
@@ -131,9 +133,19 @@ module.exports = class NetworkStatsAgent {
         this.dailyNetworkStats.date = date;
         this.dailyNetworkStats.numBlocks = 0;
         this.dailyNetworkStats.numTransactions = 0;
+        this.startBlockHeight = block.height;//!!!
         console.log(`NetworkStatsAgent new day: dailyNetworkStats reset`);//!!!
       }
       this.dailyNetworkStats.numBlocks++;
+      //!!!
+      if ((this.dailyNetworkStats.numBlocks % 100) == 0 ||
+        (this.dailyNetworkStats.numBlocks < 100 && 
+          (this.dailyNetworkStats.numBlocks  % 10) == 0)) {
+        const actualNumBlocks = block.height - this.startBlockHeight + 1;
+        console.log(
+          `NetworkStatsAgent: dailyNetworkStats.numBlocks: ${this.dailyNetworkStats.numBlocks}, actualNumBlocks: ${actualNumBlocks}`);
+      }
+      //!!!
       this.dailyNetworkStats.numTransactions += block.numTransactions;
       this.prisma.mutation
         .upsertDailyNetworkStats(
