@@ -121,6 +121,8 @@ module.exports = class NetworkStatsAgent {
         console.log(`NetworkStatsAgent started: startBlockHeight(${block.height}), this.lastBlockHeight(0)`);
       }
       else if (block.height !== this.lastBlockHeight + 1) {
+        // We also need to account for missed blocks due to the subscription not working!!!
+        // It can't all be done on the fly, we need to go back and verify a day after it's done.
         console.log(`NetworkStatsAgent missed blocks: block.height(${block.height}) != lastBlockHeight(${this.lastBlockHeight}) + 1`);
       }
       this.lastBlockHeight = block.height;
@@ -128,6 +130,9 @@ module.exports = class NetworkStatsAgent {
       // Process restarted, calculate daily network stats. The blocksConnection and
       // transactionsConnection operations are slow, so change this code if we come up with a faster
       // way to get the daily numBlocks and numTransactions.
+      // We should break this function apart into sub-functions!!!
+      // To make sure all daily network stats are valid, could have some kind of checkpoint/validated member in object!!!
+      // Whenever process starts, we could go through previous week and recalculate any completed days which are not yet checkpointed/validated!!!
       if (this.dailyNetworkStats.numBlocks === 0) {
         let connection = await this.prisma.query
           .blocksConnection(
