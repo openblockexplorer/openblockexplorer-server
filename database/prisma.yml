@@ -1,4 +1,4 @@
-endpoint: https://dfinity-explorer.herokuapp.com/dfinity-explorer-c/dev
+endpoint: https://dfinity-explorer-p-54a68e4bba.herokuapp.com/dfinity-explorer-service-a/dev
 datamodel: datamodel.prisma
 secret: ${env:PRISMA_SECRET}
 

@@ -29,7 +29,7 @@ const resolvers = {
 
 const prisma = new Prisma({
   typeDefs: 'src/generated/prisma.graphql',
-  endpoint: 'https://dfinity-explorer.herokuapp.com/dfinity-explorer-c/dev',
+  endpoint: 'https://dfinity-explorer-p-54a68e4bba.herokuapp.com/dfinity-explorer-service-a/dev',
   secret: process.env.PRISMA_SECRET,
   // Setting debug to true means that all requests made by Prisma binding instance to Prisma
   // API will be logged to the console. Set to false for production.
@@ -54,13 +54,13 @@ const prisma = new Prisma({
 //  $ prisma deploy -n
 //
 // To check Prisma server errors, open an SSH bash session into the Heroku container:
-//  $ heroku run bash -a dfinity-explorer
+//  $ heroku run bash -a dfinity-explorer-p-54a68e4bba
 //
 // --- Notes on using GraphQL Playground with Prisma server ---
 // The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
 //  $ prisma token
 // Next, open the Prisma server URL in a browser:
-//  https://dfinity-explorer.herokuapp.com/dfinity-explorer-c/dev
+//  https://dfinity-explorer-p-54a68e4bba.herokuapp.com/dfinity-explorer-service-a/dev
 // Put this into the HTTP HEADERS field of GraphQL Playground:
 //  {
 //    "Authorization": "Bearer [token]"
@@ -94,7 +94,6 @@ const server = new GraphQLServer({
 
 server.start(() => console.log('The server is running on port 4000...'));
 
-/* Temporarily disable prisma access!!!
 // Add simulated blocks to the Prisma server at 3.5 second intervals.
 const blockProducer = new BlockProducer(prisma);
 blockProducer.start();
@@ -105,4 +104,4 @@ networkStatsAgent.start();
 
 // Continuously update DFN price information on the Prisma server.
 const priceAgent = new PriceAgent(prisma);
-priceAgent.start();*/
+priceAgent.start();

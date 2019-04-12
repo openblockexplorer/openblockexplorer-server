@@ -2,10 +2,6 @@ type AggregateBlock {
   count: Int!
 }
 
-type AggregateDailyNetworkStatistics {
-  count: Int!
-}
-
 type AggregateDailyNetworkStats {
   count: Int!
 }
@@ -173,114 +169,6 @@ enum Currency {
   DFN
 }
 
-type DailyNetworkStatistics {
-  date: DateTime!
-  numBlocks: Int!
-  numTransactions: Int!
-}
-
-type DailyNetworkStatisticsConnection {
-  pageInfo: PageInfo!
-  edges: [DailyNetworkStatisticsEdge]!
-  aggregate: AggregateDailyNetworkStatistics!
-}
-
-input DailyNetworkStatisticsCreateInput {
-  date: DateTime!
-  numBlocks: Int!
-  numTransactions: Int!
-}
-
-type DailyNetworkStatisticsEdge {
-  node: DailyNetworkStatistics!
-  cursor: String!
-}
-
-enum DailyNetworkStatisticsOrderByInput {
-  date_ASC
-  date_DESC
-  numBlocks_ASC
-  numBlocks_DESC
-  numTransactions_ASC
-  numTransactions_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type DailyNetworkStatisticsPreviousValues {
-  date: DateTime!
-  numBlocks: Int!
-  numTransactions: Int!
-}
-
-type DailyNetworkStatisticsSubscriptionPayload {
-  mutation: MutationType!
-  node: DailyNetworkStatistics
-  updatedFields: [String!]
-  previousValues: DailyNetworkStatisticsPreviousValues
-}
-
-input DailyNetworkStatisticsSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: DailyNetworkStatisticsWhereInput
-  AND: [DailyNetworkStatisticsSubscriptionWhereInput!]
-  OR: [DailyNetworkStatisticsSubscriptionWhereInput!]
-  NOT: [DailyNetworkStatisticsSubscriptionWhereInput!]
-}
-
-input DailyNetworkStatisticsUpdateInput {
-  date: DateTime
-  numBlocks: Int
-  numTransactions: Int
-}
-
-input DailyNetworkStatisticsUpdateManyMutationInput {
-  date: DateTime
-  numBlocks: Int
-  numTransactions: Int
-}
-
-input DailyNetworkStatisticsWhereInput {
-  date: DateTime
-  date_not: DateTime
-  date_in: [DateTime!]
-  date_not_in: [DateTime!]
-  date_lt: DateTime
-  date_lte: DateTime
-  date_gt: DateTime
-  date_gte: DateTime
-  numBlocks: Int
-  numBlocks_not: Int
-  numBlocks_in: [Int!]
-  numBlocks_not_in: [Int!]
-  numBlocks_lt: Int
-  numBlocks_lte: Int
-  numBlocks_gt: Int
-  numBlocks_gte: Int
-  numTransactions: Int
-  numTransactions_not: Int
-  numTransactions_in: [Int!]
-  numTransactions_not_in: [Int!]
-  numTransactions_lt: Int
-  numTransactions_lte: Int
-  numTransactions_gt: Int
-  numTransactions_gte: Int
-  AND: [DailyNetworkStatisticsWhereInput!]
-  OR: [DailyNetworkStatisticsWhereInput!]
-  NOT: [DailyNetworkStatisticsWhereInput!]
-}
-
-input DailyNetworkStatisticsWhereUniqueInput {
-  date: DateTime
-}
-
 type DailyNetworkStats {
   date: DateTime!
   numBlocks: Int!
@@ -404,12 +292,6 @@ type Mutation {
   upsertBlock(where: BlockWhereUniqueInput!, create: BlockCreateInput!, update: BlockUpdateInput!): Block!
   deleteBlock(where: BlockWhereUniqueInput!): Block
   deleteManyBlocks(where: BlockWhereInput): BatchPayload!
-  createDailyNetworkStatistics(data: DailyNetworkStatisticsCreateInput!): DailyNetworkStatistics!
-  updateDailyNetworkStatistics(data: DailyNetworkStatisticsUpdateInput!, where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
-  updateManyDailyNetworkStatisticses(data: DailyNetworkStatisticsUpdateManyMutationInput!, where: DailyNetworkStatisticsWhereInput): BatchPayload!
-  upsertDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!, create: DailyNetworkStatisticsCreateInput!, update: DailyNetworkStatisticsUpdateInput!): DailyNetworkStatistics!
-  deleteDailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
-  deleteManyDailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput): BatchPayload!
   createDailyNetworkStats(data: DailyNetworkStatsCreateInput!): DailyNetworkStats!
   updateDailyNetworkStats(data: DailyNetworkStatsUpdateInput!, where: DailyNetworkStatsWhereUniqueInput!): DailyNetworkStats
   updateManyDailyNetworkStatses(data: DailyNetworkStatsUpdateManyMutationInput!, where: DailyNetworkStatsWhereInput): BatchPayload!
@@ -650,9 +532,6 @@ type Query {
   block(where: BlockWhereUniqueInput!): Block
   blocks(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Block]!
   blocksConnection(where: BlockWhereInput, orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BlockConnection!
-  dailyNetworkStatistics(where: DailyNetworkStatisticsWhereUniqueInput!): DailyNetworkStatistics
-  dailyNetworkStatisticses(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStatistics]!
-  dailyNetworkStatisticsesConnection(where: DailyNetworkStatisticsWhereInput, orderBy: DailyNetworkStatisticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatisticsConnection!
   dailyNetworkStats(where: DailyNetworkStatsWhereUniqueInput!): DailyNetworkStats
   dailyNetworkStatses(where: DailyNetworkStatsWhereInput, orderBy: DailyNetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DailyNetworkStats]!
   dailyNetworkStatsesConnection(where: DailyNetworkStatsWhereInput, orderBy: DailyNetworkStatsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DailyNetworkStatsConnection!
@@ -670,7 +549,6 @@ type Query {
 
 type Subscription {
   block(where: BlockSubscriptionWhereInput): BlockSubscriptionPayload
-  dailyNetworkStatistics(where: DailyNetworkStatisticsSubscriptionWhereInput): DailyNetworkStatisticsSubscriptionPayload
   dailyNetworkStats(where: DailyNetworkStatsSubscriptionWhereInput): DailyNetworkStatsSubscriptionPayload
   networkStats(where: NetworkStatsSubscriptionWhereInput): NetworkStatsSubscriptionPayload
   price(where: PriceSubscriptionWhereInput): PriceSubscriptionPayload
