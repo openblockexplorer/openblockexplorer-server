@@ -94,6 +94,7 @@ const server = new GraphQLServer({
 
 server.start(() => console.log('The server is running on port 4000...'));
 
+/* Temporarily disable prisma access!!!
 // Add simulated blocks to the Prisma server at 3.5 second intervals.
 const blockProducer = new BlockProducer(prisma);
 blockProducer.start();
@@ -104,4 +105,4 @@ networkStatsAgent.start();
 
 // Continuously update DFN price information on the Prisma server.
 const priceAgent = new PriceAgent(prisma);
-priceAgent.start();
+priceAgent.start();*/
