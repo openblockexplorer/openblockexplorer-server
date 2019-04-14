@@ -17,12 +17,13 @@ type Query {
   dailyNetworkStatses(last: Int, orderBy: DailyNetworkStatsOrderByInput): [DailyNetworkStats]!
   networkStats: NetworkStats!
   price: Price!
+  candles(start: DateTime!, end: DateTime!) : [OHLCVCandle!]!
 }
 
 # Mutations
 # Do not expose mutations on deployed server.
 # type Mutation {
-#  createBlock(height: Int!, timestamp: String!): Block!
+#  createBlock(height: Int!, timestamp: DateTime!): Block!
 #  createTransaction(hash: String!, amount: Float!, blockId: ID!): Transaction!
 # }
 
@@ -43,7 +44,7 @@ interface Node {
 type Block implements Node {
   id: ID!
   height: Int!
-  timestamp: String!
+  timestamp: DateTime!
   transactions: [Transaction!]!
   numTransactions: Int!
 }
@@ -72,6 +73,17 @@ type NetworkStats {
 # Represents the current DFN price.
 type Price {
   price: Float!
+}
+
+# Represents a point in time of DFN price history. OHLCV stands for Open, High, Low, Close, and
+# Volume.
+type OHLCVCandle {
+  timestamp: DateTime!
+  open: Float!
+  high: Float!
+  low: Float!
+  close: Float!
+  volume: Float!
 }
 
 # Holds a searchGetType result.
