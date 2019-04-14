@@ -14,7 +14,7 @@ type Query {
   transaction(hash: String!): Transaction
   searchGetType(query: String!): SearchGetTypeResult!
   searchAutoComplete(query: String!, first: Int): SearchAutoCompleteResult!
-  dailyNetworkStatses(last: Int, orderBy: DailyNetworkStatsOrderByInput): [DailyNetworkStats]!
+  dailyNetworkStatses(last: Int, skip: Int, orderBy: DailyNetworkStatsOrderByInput): [DailyNetworkStats]!
   networkStats: NetworkStats!
   price: Price!
   candles(start: DateTime!, end: DateTime!) : [OHLCVCandle!]!

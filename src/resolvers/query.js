@@ -111,7 +111,8 @@ function searchAutoComplete(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 function dailyNetworkStatses(parent, args, context, info) {
-  return context.db.query.dailyNetworkStatses({ last: args.last, orderBy: args.orderBy }, info);
+  return context.db.query.dailyNetworkStatses(
+    { last: args.last, skip: args.skip, orderBy: args.orderBy }, info);
 }
 
 /**
