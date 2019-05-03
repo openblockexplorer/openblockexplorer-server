@@ -4,11 +4,14 @@
  # @license MIT License
  ##
 
-# import BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, DailyNetworkStatsOrderByInput, NetworkStatsSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
+# import BlockConnection, BlockOrderByInput, BlockSubscriptionPayload, TransactionOrderByInput, TransactionSubscriptionPayload, DailyNetworkStatsOrderByInput, NetworkStatsSubscriptionPayload, PriceSubscriptionPayload from "./generated/prisma.graphql"
 
 # Queries
 type Query {
   blocks(first: Int, orderBy: BlockOrderByInput): [Block!]!
+  blocksConnection(
+    orderBy: BlockOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int):
+    BlockConnection!
   block(height: Int!): Block
   transactions(first: Int, orderBy: TransactionOrderByInput): [Transaction!]!
   transaction(hash: String!): Transaction

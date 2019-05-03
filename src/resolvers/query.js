@@ -19,6 +19,18 @@ function blocks(parent, args, context, info) {
 }
 
 /**
+ * GraphQL resolver for blocksConnection query.
+ * @param {Object} parent The result object of the parent resolver.
+ * @param {Object} args The parameters for the query.
+ * @param {Object} context Object shared by all resolvers that gets passed through resolver chain.
+ * @param {Object} info An AST representation of the query.
+ * @return {Object} The scalar/object resolver result.
+ */
+function blocksConnection(parent, args, context, info) {
+  return context.db.query.blocksConnection(args, info);
+}
+
+/**
  * GraphQL resolver for block query.
  * @param {Object} parent The result object of the parent resolver.
  * @param {Object} args The parameters for the query.
@@ -187,6 +199,7 @@ function dateToRfc3339(date) {
 
 module.exports = {
   blocks,
+  blocksConnection,
   block,
   transactions,
   transaction,
