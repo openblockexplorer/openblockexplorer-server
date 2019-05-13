@@ -56,6 +56,15 @@ const prisma = new Prisma({
 // To check Prisma server errors, open an SSH bash session into the Heroku container:
 //  $ heroku run bash -a dfinity-explorer-p-54a68e4bba
 //
+// To restart the Prisma server dyno:
+//  $ heroku restart -a dfinity-explorer-p-54a68e4bba
+//
+// To upgrade the Prisma CLI version:
+//  $ npm i -g prisma
+//
+// To upgrade the Prisma server version:
+//  https://github.com/prisma/prisma-cloud-feedback/issues/202
+//
 // --- Notes on using GraphQL Playground with Prisma server ---
 // The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
 //  $ prisma token
