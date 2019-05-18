@@ -172,7 +172,7 @@ function price(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 async function candles(parent, args, context, info) {
-  // Until the DFINITY network launches, use the ETH price divided by 15 as a simulated DFN price.
+  // Until the DFINITY network launches, use the ETH price divided by 30 as a simulated DFN price.
   const startDate = new Date(args.start);
   const endDate = new Date(args.end);
   const url =
@@ -182,10 +182,10 @@ async function candles(parent, args, context, info) {
       const candles = res.data.map((candle) => {
         return {
           timestamp: new Date(candle.timestamp),
-          open: parseFloat(candle.open) / 15,
-          high: parseFloat(candle.high) / 15,
-          low: parseFloat(candle.low) / 15,
-          close: parseFloat(candle.close) / 15,
+          open: parseFloat(candle.open) / 30,
+          high: parseFloat(candle.high) / 30,
+          low: parseFloat(candle.low) / 30,
+          close: parseFloat(candle.close) / 30,
           volume: parseFloat(candle.volume)
         };
       });
