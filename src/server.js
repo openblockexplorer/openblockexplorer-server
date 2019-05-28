@@ -30,7 +30,7 @@ const resolvers = {
 const prisma = new Prisma({
   typeDefs: 'src/generated/prisma.graphql',
   //endpoint: 'https://dfinity-explorer-p-54a68e4bba.herokuapp.com/dfinity-explorer-service-a/dev',
-  endpoint: 'http://prism-publi-hwk7lncrmzx3-1989461046.us-west-2.elb.amazonaws.com/prisma-service/dev',
+  endpoint: 'https://prisma.dfinityexplorer.org/prisma-service/dev',
   secret: process.env.PRISMA_SECRET,
   // Setting debug to true means that all requests made by Prisma binding instance to Prisma
   // API will be logged to the console. Set to false for production.
