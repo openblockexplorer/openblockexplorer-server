@@ -24,6 +24,7 @@ type BatchPayload {
 
 type Block {
   id: ID!
+  createdAt: DateTime!
   height: Int!
   timestamp: DateTime!
   transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction!]
@@ -36,6 +37,7 @@ type BlockConnection {
 }
 
 input BlockCreateInput {
+  id: ID
   height: Int!
   timestamp: DateTime!
   transactions: TransactionCreateManyWithoutBlockInput
@@ -47,6 +49,7 @@ input BlockCreateOneWithoutTransactionsInput {
 }
 
 input BlockCreateWithoutTransactionsInput {
+  id: ID
   height: Int!
   timestamp: DateTime!
 }
@@ -59,18 +62,17 @@ type BlockEdge {
 enum BlockOrderByInput {
   id_ASC
   id_DESC
+  createdAt_ASC
+  createdAt_DESC
   height_ASC
   height_DESC
   timestamp_ASC
   timestamp_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type BlockPreviousValues {
   id: ID!
+  createdAt: DateTime!
   height: Int!
   timestamp: DateTime!
 }
@@ -136,6 +138,14 @@ input BlockWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   height: Int
   height_not: Int
   height_in: [Int!]
@@ -170,6 +180,7 @@ enum Currency {
 }
 
 type DailyNetworkStats {
+  id: ID!
   date: DateTime!
   numBlocks: Int!
   numTransactions: Int!
@@ -182,6 +193,7 @@ type DailyNetworkStatsConnection {
 }
 
 input DailyNetworkStatsCreateInput {
+  id: ID
   date: DateTime!
   numBlocks: Int!
   numTransactions: Int!
@@ -193,21 +205,18 @@ type DailyNetworkStatsEdge {
 }
 
 enum DailyNetworkStatsOrderByInput {
+  id_ASC
+  id_DESC
   date_ASC
   date_DESC
   numBlocks_ASC
   numBlocks_DESC
   numTransactions_ASC
   numTransactions_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type DailyNetworkStatsPreviousValues {
+  id: ID!
   date: DateTime!
   numBlocks: Int!
   numTransactions: Int!
@@ -244,6 +253,20 @@ input DailyNetworkStatsUpdateManyMutationInput {
 }
 
 input DailyNetworkStatsWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   date: DateTime
   date_not: DateTime
   date_in: [DateTime!]
@@ -274,6 +297,7 @@ input DailyNetworkStatsWhereInput {
 }
 
 input DailyNetworkStatsWhereUniqueInput {
+  id: ID
   date: DateTime
 }
 
@@ -325,6 +349,7 @@ enum MutationType {
 }
 
 type NetworkStats {
+  id: ID!
   duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
@@ -337,6 +362,7 @@ type NetworkStatsConnection {
 }
 
 input NetworkStatsCreateInput {
+  id: ID
   duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
@@ -348,21 +374,18 @@ type NetworkStatsEdge {
 }
 
 enum NetworkStatsOrderByInput {
+  id_ASC
+  id_DESC
   duration_ASC
   duration_DESC
   secondsPerBlock_ASC
   secondsPerBlock_DESC
   transactionsPerSecond_ASC
   transactionsPerSecond_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type NetworkStatsPreviousValues {
+  id: ID!
   duration: Duration!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
@@ -399,6 +422,20 @@ input NetworkStatsUpdateManyMutationInput {
 }
 
 input NetworkStatsWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   duration: Duration
   duration_not: Duration
   duration_in: [Duration!]
@@ -425,6 +462,7 @@ input NetworkStatsWhereInput {
 }
 
 input NetworkStatsWhereUniqueInput {
+  id: ID
   duration: Duration
 }
 
@@ -440,6 +478,7 @@ type PageInfo {
 }
 
 type Price {
+  id: ID!
   currency: Currency!
   price: Float!
 }
@@ -451,6 +490,7 @@ type PriceConnection {
 }
 
 input PriceCreateInput {
+  id: ID
   currency: Currency!
   price: Float!
 }
@@ -461,19 +501,16 @@ type PriceEdge {
 }
 
 enum PriceOrderByInput {
+  id_ASC
+  id_DESC
   currency_ASC
   currency_DESC
   price_ASC
   price_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type PricePreviousValues {
+  id: ID!
   currency: Currency!
   price: Float!
 }
@@ -507,6 +544,20 @@ input PriceUpdateManyMutationInput {
 }
 
 input PriceWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   currency: Currency
   currency_not: Currency
   currency_in: [Currency!]
@@ -525,6 +576,7 @@ input PriceWhereInput {
 }
 
 input PriceWhereUniqueInput {
+  id: ID
   currency: Currency
 }
 
@@ -557,6 +609,7 @@ type Subscription {
 
 type Transaction {
   id: ID!
+  createdAt: DateTime!
   hash: String!
   amount: Float!
   block: Block!
@@ -569,6 +622,7 @@ type TransactionConnection {
 }
 
 input TransactionCreateInput {
+  id: ID
   hash: String!
   amount: Float!
   block: BlockCreateOneWithoutTransactionsInput!
@@ -580,6 +634,7 @@ input TransactionCreateManyWithoutBlockInput {
 }
 
 input TransactionCreateWithoutBlockInput {
+  id: ID
   hash: String!
   amount: Float!
 }
@@ -592,18 +647,17 @@ type TransactionEdge {
 enum TransactionOrderByInput {
   id_ASC
   id_DESC
+  createdAt_ASC
+  createdAt_DESC
   hash_ASC
   hash_DESC
   amount_ASC
   amount_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type TransactionPreviousValues {
   id: ID!
+  createdAt: DateTime!
   hash: String!
   amount: Float!
 }
@@ -623,6 +677,14 @@ input TransactionScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   hash: String
   hash_not: String
   hash_in: [String!]
@@ -732,6 +794,14 @@ input TransactionWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   hash: String
   hash_not: String
   hash_in: [String!]
