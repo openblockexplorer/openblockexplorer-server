@@ -64,20 +64,23 @@ type Transaction implements Node {
 }
 
 # Represents daily DFINITY network stats.
-type DailyNetworkStats {
+type DailyNetworkStats implements Node {
+  id: ID!
   date: DateTime!
   numBlocks: Int!
   numTransactions: Int!
 }
 
 # Represents current DFINITY network stats.
-type NetworkStats {
+type NetworkStats implements Node {
+  id: ID!
   secondsPerBlock: Float!
   transactionsPerSecond: Float!
 }
 
 # Represents the current DFN price.
-type Price {
+type Price implements Node {
+  id: ID!
   price: Float!
 }
 
