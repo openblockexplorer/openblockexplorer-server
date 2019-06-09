@@ -119,7 +119,7 @@ module.exports = class NetworkStatsAgent {
       // If it is a new day, create/update the daily network stats object on the Prisma server.
       const date = this.getUTCDate(block.timestamp);
       if (date.getTime() !== this.date.getTime()) {
-        createDailyNetworkStats(this.date);
+        this.createDailyNetworkStats(this.date);
         this.date = date;
       }
     }
