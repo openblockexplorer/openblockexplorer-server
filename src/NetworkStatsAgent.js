@@ -111,8 +111,8 @@ module.exports = class NetworkStatsAgent {
 
       // Process started, set this.date to yesterday to trigger a call to createDailyNetworkStats().
       if (this.date === null) {
-        const yesterday = new Date();
-        yesterday.setDate(block.timestamp - 1);
+        const yesterday = new Date(block.timestamp.getTime());
+        yesterday.setDate(yesterday.getDate() - 1);
         this.date = this.getUTCDate(yesterday);
       }
 
@@ -132,8 +132,8 @@ module.exports = class NetworkStatsAgent {
    * @private
    */
   async createDailyNetworkStats(date) {
-    const dateAfter = new Date();
-    dateAfter.setDate(date + 1);
+    const dateAfter = new Date(date.getTime());
+    dateAfter.setDate(dateAfter.getDate() + 1);
 
     // Calculate daily network stats.
     let connection = await this.prisma.query
@@ -167,7 +167,7 @@ module.exports = class NetworkStatsAgent {
     const numTransactions = connection.aggregate.count;
 
     const dailyNetworkStats = {
-      date,
+      date: date,
       numBlocks: numBlocks,
       numTransactions: numTransactions
     };
