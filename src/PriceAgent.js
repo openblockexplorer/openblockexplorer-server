@@ -37,19 +37,15 @@ module.exports = class PriceAgent {
    * @private
    */
   updatePrice() {
-    // Until the DFINITY network launches, use the ETH price divided by 30 as a simulated DFN price.
     // If an error occurs, we simply log it, since we want the agent to keep running.
     const url =
-      `https://api.nomics.com/v1/markets/prices?key=${process.env.NOMICS_API_KEY}&currency=ETH`;
+      `https://api.nomics.com/v1/currencies/ticker?key=${process.env.NOMICS_API_KEY}&ids=DFN&interval=1d`;
     axios.get(url)
       .then(res => {
-        const binance = res.data.find(obj => {
-          return obj.exchange === 'binance'
-        });
-        if (binance != undefined) {
+        if (res.data.length > 0) {
           // Create/update the price object on the Prisma server. If an error occurs, we simply log
           // it, since we want the PriceAgent to keep running.
-          const dfnPrice = parseFloat(binance.price) / 30;
+          const dfnPrice = parseFloat(res.data[0].price);
           const price = {
             currency: 'DFN',
             price: dfnPrice

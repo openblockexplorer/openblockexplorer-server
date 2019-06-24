@@ -172,20 +172,19 @@ function price(parent, args, context, info) {
  * @return {Object} The scalar/object resolver result.
  */
 async function candles(parent, args, context, info) {
-  // Until the DFINITY network launches, use the ETH price divided by 30 as a simulated DFN price.
   const startDate = new Date(args.start);
   const endDate = new Date(args.end);
   const url =
-    `https://api.nomics.com/v1/candles?key=${process.env.NOMICS_API_KEY}&interval=1d&currency=ETH&start=${dateToRfc3339(startDate)}&end=${dateToRfc3339(endDate)}`;
+    `https://api.nomics.com/v1/candles?key=${process.env.NOMICS_API_KEY}&interval=1d&currency=DFN&start=${dateToRfc3339(startDate)}&end=${dateToRfc3339(endDate)}`;
   const candles = await axios.get(url)
     .then(res => {
       const candles = res.data.map((candle) => {
         return {
           timestamp: new Date(candle.timestamp),
-          open: parseFloat(candle.open) / 30,
-          high: parseFloat(candle.high) / 30,
-          low: parseFloat(candle.low) / 30,
-          close: parseFloat(candle.close) / 30,
+          open: parseFloat(candle.open),
+          high: parseFloat(candle.high),
+          low: parseFloat(candle.low),
+          close: parseFloat(candle.close),
           volume: parseFloat(candle.volume)
         };
       });
