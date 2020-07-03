@@ -66,6 +66,18 @@ const prisma = new Prisma({
 // To upgrade the Prisma server version:
 //  https://github.com/prisma/prisma-cloud-feedback/issues/202
 //
+// --- Notes on Prisma service on AWS Fargate ---
+//
+// To restart tasks of service:
+//  $ aws ecs list-clusters
+//  $ aws ecs list-services --cluster "arn:aws:ecs:us-west-2:976811037259:cluster/prisma-server-ECSCluster-1E5CKO428SCUN"
+//  $ aws ecs update-service --force-new-deployment --cluster "arn:aws:ecs:us-west-2:976811037259:cluster/prisma-server-ECSCluster-1E5CKO428SCUN" --service "arn:aws:ecs:us-west-2:976811037259:service/Prisma"
+//
+// To connect to the database using MySQL Shell:
+//  $ \connect prisma@prisma.c2kfu74ivdsq.us-west-2.rds.amazonaws.com:3306
+//  $ \sql show databases
+//  $ \sql use `prisma-service@dev`
+//
 // --- Notes on using GraphQL Playground with Prisma server ---
 // The easiest way to obtain an API token is by using the prisma token command from the Prisma CLI:
 //  $ prisma token
