@@ -1,5 +1,5 @@
 #endpoint: https://dfinity-explorer-p-54a68e4bba.herokuapp.com/dfinity-explorer-service-a/dev
-endpoint: https://prisma.dfinityexplorer.org/prisma-service/dev
+endpoint: https://prisma.openblockexplorer.org/prisma-service/dev
 datamodel: datamodel.prisma
 secret: ${env:PRISMA_SECRET}
 

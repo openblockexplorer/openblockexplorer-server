@@ -1,6 +1,6 @@
 /**
  * @file BlockProducer
- * @copyright Copyright (c) 2018 Dylan Miller and dfinityexplorer contributors
+ * @copyright Copyright (c) 2018 Dylan Miller and openblockexplorer contributors
  * @license MIT License
  */
 
@@ -9,7 +9,7 @@ const getRandomInt = require('./utils/getRandomInt');
 const getRandomNumber = require('./utils/getRandomNumber');
 
 /**
- * Provides a simulation of the DFINITY network.
+ * Provides a simulation of a blockchain network.
  */
 module.exports = class BlockProducer {
   /**

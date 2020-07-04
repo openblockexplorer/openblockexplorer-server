@@ -1,6 +1,6 @@
 /**
  * @file SearchAutoCompleteResult
- * @copyright Copyright (c) 2018 Dylan Miller and dfinityexplorer contributors
+ * @copyright Copyright (c) 2018 Dylan Miller and openblockexplorer contributors
  * @license MIT License
  */
 

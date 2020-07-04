@@ -2,7 +2,7 @@
 # If changes are made to this file, run "prisma deploy" from the project root folder to sync changes
 # with the running Prisma service, and to re-generate the file src/generated/prisma.graphql.
 
-# This type represents a DFINITY block.
+# This type represents a block.
 type Block {
   id: ID! @id
   createdAt: DateTime! @createdAt
@@ -11,7 +11,7 @@ type Block {
   transactions: [Transaction!]!
 }
 
-# This type represents a DFINITY transaction.
+# This type represents a transaction.
 type Transaction {
   id: ID! @id
   createdAt: DateTime! @createdAt
@@ -20,7 +20,7 @@ type Transaction {
   block: Block!
 }
 
-# This type represents daily DFINITY network stats.
+# This type represents daily network stats.
 type DailyNetworkStats {
   id: ID! @id
   date: DateTime! @unique
@@ -33,7 +33,7 @@ enum Duration {
   MINUTES_10
 }
 
-# This type represents current DFINITY network stats over a duration of time.
+# This type represents current network stats over a duration of time.
 type NetworkStats {
   id: ID! @id
   duration: Duration! @unique

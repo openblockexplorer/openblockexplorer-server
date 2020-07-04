@@ -1,8 +1,8 @@
 {
-  "name": "dfinityexplorer-server",
+  "name": "openblockexplorer-server",
   "version": "0.0.1",
   "private": true,
-  "homepage": "https://www.dfinityexplorer.org",
+  "homepage": "https://www.openblockexplorer.org",
   "dependencies": {
     "axios": "^0.18.0",
     "graphql-yoga": "^1.17.4",

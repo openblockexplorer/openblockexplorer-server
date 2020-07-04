@@ -1,6 +1,6 @@
 ###
  # @file schema.graphql
- # @copyright Copyright (c) 2018-2019 Dylan Miller and dfinityexplorer contributors
+ # @copyright Copyright (c) 2018-2019 Dylan Miller and openblockexplorer contributors
  # @license MIT License
  ##
 
@@ -46,7 +46,7 @@ interface Node {
   id: ID!
 }
 
-# Represents a DFINITY block.
+# Represents a block.
 type Block implements Node {
   id: ID!
   height: Int!
@@ -55,7 +55,7 @@ type Block implements Node {
   numTransactions: Int!
 }
 
-# Represents a DFINITY transaction.
+# Represents a transaction.
 type Transaction implements Node {
   id: ID!
   hash: String!
@@ -63,7 +63,7 @@ type Transaction implements Node {
   block: Block!
 }
 
-# Represents daily DFINITY network stats.
+# Represents daily network stats.
 type DailyNetworkStats implements Node {
   id: ID!
   date: DateTime!
@@ -71,7 +71,7 @@ type DailyNetworkStats implements Node {
   numTransactions: Int!
 }
 
-# Represents current DFINITY network stats.
+# Represents current network stats.
 type NetworkStats implements Node {
   id: ID!
   secondsPerBlock: Float!
