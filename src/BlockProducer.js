@@ -22,7 +22,7 @@ module.exports = class BlockProducer {
     this.prisma = prisma;
 
     // The block time.
-    this.blockTimeMs = 3500;
+    this.blockTimeMs = 60000;
 
     // Starting block height.
     const startDate = new Date(2018, 8, 1);
@@ -46,7 +46,7 @@ module.exports = class BlockProducer {
    */
   addBlock() {
     let transactions = [];
-    const numTransactions = 0 + getRandomInt(0, 12);
+    const numTransactions = 0 + getRandomInt(0, 5);
     for (let i = 0; i < numTransactions; i++)
       transactions.push(this.createTransaction());
 
@@ -59,6 +59,29 @@ module.exports = class BlockProducer {
     // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
     this.prisma.mutation
       .createBlock({ data: block }, '{ id }')
+      .catch(error => console.log(error));
+
+    removeBlocks();
+  }
+
+  removeBlocks() {
+    const block = {
+      height_lt: this.blockHeight - 10
+    };
+    this.prisma.mutation
+      .deleteManyTransactions(
+        {
+          where: { block: block }
+        }
+      )
+      .catch(error => console.log(error));
+
+    this.prisma.mutation
+     .deleteManyBlocks(
+        {
+          where: block
+        }
+      )
       .catch(error => console.log(error));
   }
 
