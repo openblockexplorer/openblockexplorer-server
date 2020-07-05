@@ -22,10 +22,15 @@ module.exports = class BlockProducer {
     this.prisma = prisma;
 
     // The block time.
-    this.blockTimeMs = 60000;
+    this.blockTimeMs = 10000;   // 10 seconds
+
+    // The remove time and the max number of blocks to keep in the database.
+    this.removeTimeMs = 60000; // 10 minutes
+    const blocksPerDay = 24 * 60 * 60 / (this.blockTimeMs / 1000);
+    this.maxBlocks = blocksPerDay; // keep at most one day of blocks
 
     // Starting block height.
-    const startDate = new Date(2018, 8, 1);
+    const startDate = new Date(2020, 6, 1);
     const todayDate = new Date();
     const elapsedMs = todayDate.getTime() - startDate.getTime();
     this.blockHeight = Math.floor(elapsedMs / this.blockTimeMs);
@@ -38,6 +43,9 @@ module.exports = class BlockProducer {
   start() {
     // Add new blocks using intervals.
     setInterval(() => { this.addBlock() }, this.blockTimeMs);
+
+    // Remove old blocks using intervals.
+    setInterval(() => { this.removeBlocks() }, this.removeTimeMs);
   }
 
   /**
@@ -60,28 +68,22 @@ module.exports = class BlockProducer {
     this.prisma.mutation
       .createBlock({ data: block }, '{ id }')
       .catch(error => console.log(error));
-
-    removeBlocks();
   }
 
-  removeBlocks() {
+  /**
+   * Remove old blocks from the Prisma server.
+   * @private
+   */
+  async removeBlocks() {
     const block = {
-      height_lt: this.blockHeight - 10
+      height_lt: this.blockHeight - this.maxBlocks
     };
-    this.prisma.mutation
-      .deleteManyTransactions(
-        {
-          where: { block: block }
-        }
-      )
+    // If an error occurs, we simply log it, since we want the BlockProducer to keep running.
+    await this.prisma.mutation
+      .deleteManyTransactions({ where: { block: block } })
       .catch(error => console.log(error));
-
-    this.prisma.mutation
-     .deleteManyBlocks(
-        {
-          where: block
-        }
-      )
+    await this.prisma.mutation
+      .deleteManyBlocks({ where: block })
       .catch(error => console.log(error));
   }
 
